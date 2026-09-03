@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="icon" href="fav.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Agenda & Performance 🛡️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'masc-dark': '#0f172a',
+                        'masc-blue': '#1e293b',
+                        'masc-accent': '#3b82f6',
+                        'masc-accent-hover': '#2563eb',
+                        'masc-slate': '#334155',
+                        'masc-surface': '#f8fafc',
+                        'masc-border': '#e2e8f0',
+                        'masc-card': '#ffffff',
+                    },
+                    fontFamily: {
+                        'outfit': ['Outfit', 'sans-serif'],
+                        'inter': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
+        .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+
+        .tape-effect { position: relative; }
+        .tape-effect::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-1deg);
+            width: 80px;
+            height: 20px;
+            background-color: rgba(226, 232, 240, 0.9);
+            border: 1px dashed rgba(100, 116, 139, 0.4);
+            z-index: 10;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .scrapbook-frame {
+            border: 2px solid #cbd5e1;
+            background-color: #ffffff;
+            box-shadow: 4px 4px 0px #94a3b8;
+            position: relative;
+        }
+
+        .card-fofo { transition: all 0.2s ease; }
+        .card-fofo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(30, 41, 59, 0.12);
+        }
+
+        .memory-card { perspective: 1000px; }
+        .memory-card-inner {
+            transition: transform 0.4s;
+            transform-style: preserve-3d;
+        }
+        .memory-card.flipped .memory-card-inner,
+        .memory-card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+        .memory-card-front, .memory-card-back {
+            backface-visibility: hidden;
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem;
+        }
+        .memory-card-back { transform: rotateY(180deg); }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: translateY(85vh) rotate(720deg) scale(1.2); opacity: 0; }
+        }
+        .confetti-particle {
+            position: fixed;
+            z-index: 99999;
+            pointer-events: none;
+            animation: confettiFall 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-700 pb-12 flex flex-col justify-between selection:bg-blue-500 selection:text-white">
+
+    <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-sm text-white">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="playClickSound(); switchTab('main-tab')">
+                <div class="w-11 h-11 bg-blue-600 rounded-xl flex items-center justify-center text-xl shadow-sm text-white">💼</div>
+                <div>
+                    <h1 class="text-2xl font-bold text-white tracking-wide flex items-center gap-2">
+                        Painel Executivo <span class="text-xs bg-slate-800 text-blue-400 border border-slate-700 px-2.5 py-0.5 rounded-full font-normal">Dashboard & Notas ⚡</span>
+                    </h1>
+                    <div class="flex items-center gap-2">
+                        <p class="text-xs text-slate-400 font-medium" id="header-date">Carregando data...</p>
+                        <span onclick="event.stopPropagation(); triggerLalaMagic(event)" class="text-[11px] font-bold text-blue-400 bg-blue-950/80 hover:bg-blue-900 px-2.5 py-0.5 rounded-full cursor-pointer transition transform hover:scale-105 shadow-xs border border-blue-800" title="Clique para impulso extra! ⚡">dev: Lala Boot ⚡🛡️</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="playClickSound(); switchTab('main-tab')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition shadow-xs border border-slate-700">
+                    🏠 Início
+                </button>
+                <button onclick="playClickSound(); switchTab('expenses-tab')" class="px-3 py-2 rounded-xl bg-emerald-950 hover:bg-emerald-900 text-emerald-300 font-bold text-xs transition shadow-xs border border-emerald-800">
+                    💸 Finanças
+                </button>
+                <button onclick="playClickSound(); switchTab('studies-tab')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs transition shadow-xs border border-slate-700">
+                    📚 Estudos
+                </button>
+                <button onclick="playClickSound(); switchTab('menu-tab')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-bold text-xs transition shadow-xs border border-slate-700">
+                    🥦 Dieta & Rotina
+                </button>
+                <button onclick="playClickSound(); switchTab('movies-tab')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-purple-300 font-bold text-xs transition shadow-xs border border-slate-700">
+                    🎥 Mídia & Séries
+                </button>
+                <button onclick="playClickSound(); switchTab('birthdays-tab')" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-rose-300 font-bold text-xs transition shadow-xs border border-slate-700">
+                    🎂 Prazos & Datas
+                </button>
+                <button onclick="playTrashSound(); openTrashModal()" title="Lixeira" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-red-950 text-slate-300 hover:text-red-300 font-bold text-xs flex items-center gap-2 transition shadow-xs relative border border-slate-700">
+                    <i class="fa-solid fa-trash"></i>
+                    <span id="trash-badge" class="bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 space-y-8 flex-grow w-full">
+
+        <div id="main-tab" class="tab-content space-y-8">
+            <section class="bg-gradient-to-r from-slate-900 via-slate-800 to-blue-950 p-6 rounded-3xl border border-slate-700 shadow-md space-y-4 text-white">
+                <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-700 pb-3">
+                    <div>
+                        <span class="text-xs font-bold text-blue-400 bg-slate-800/80 px-3 py-1 rounded-full inline-block border border-slate-700">⚡ Visão Geral do Dia</span>
+                        <h2 class="text-2xl font-bold text-white mt-1">Minha Rotina de Alta Performance</h2>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="playClickSound(); openRoutineModal()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-1.5 border border-slate-700">
+                            <i class="fa-solid fa-pen"></i> Gerenciar Blocos
+                        </button>
+                        <button onclick="playClickSound(); openTaskModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> Adicionar Tarefa
+                        </button>
+                    </div>
+                </div>
+
+                <div id="ideal-routine-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3"></div>
+            </section>
+
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="tape-effect bg-white p-6 rounded-3xl border border-slate-200 flex flex-col justify-between shadow-sm relative overflow-hidden">
+                    <div class="space-y-2">
+                        <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full inline-block">💡 Frase de Foco</span>
+                        <p id="quote-text" class="font-mono-code text-2xl text-slate-800 leading-snug pt-2">
+                            "Disciplina é a ponte entre suas metas e suas realizações. Mantenha o foco no objetivo."
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                        <span class="text-xs text-slate-500 font-semibold">⚙️ Mentalidade & Ação</span>
+                        <button onclick="playClickSound(); newQuote()" class="text-xs font-bold bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl border border-slate-300 text-slate-700 transition">Nova Frase ⚡</button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center px-2">
+                        <h3 class="font-bold text-slate-800 text-base" id="calendar-month-year">Setembro 2026</h3>
+                        <div class="flex gap-1 text-xs">
+                            <button onclick="playClickSound(); changeMonth(-1)" class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition">❮</button>
+                            <button onclick="playClickSound(); changeMonth(1)" class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition">❯</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-400 py-1">
+                        <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+                    </div>
+                    <div id="calendar-days" class="grid grid-cols-7 gap-1 text-center text-xs font-semibold"></div>
+                </div>
+            </section>
+
+            <section class="space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">📋 Checklist de Tarefas Diárias</h2>
+                        <p class="text-xs text-slate-500">Marque as atividades concluídas ou clique em uma tarefa para editar/excluir</p>
+                    </div>
+                    <button onclick="playClickSound(); openTaskModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs shadow-xs transition">+ Adicionar Tarefa</button>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                    <div class="flex justify-between items-center text-xs font-bold">
+                        <span>Progresso Diário</span>
+                        <span id="routine-progress-percent" class="text-blue-600">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
+                        <div id="routine-progress-bar" class="bg-blue-600 h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+
+                <div id="complete-day-container" class="hidden">
+                    <button onclick="playClickSound(); archiveCompletedDay()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2 animate-bounce">
+                        <i class="fa-solid fa-circle-check text-base"></i> Excelente! Todas as tarefas concluídas. Clique para reiniciar o ciclo de hoje! 🚀
+                    </button>
+                </div>
+
+                <div id="routine-list" class="grid grid-cols-1 gap-3"></div>
+            </section>
+
+            <section class="space-y-4 pt-4 border-t border-slate-200">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">📌 Bloco de Notas & Lembretes</h2>
+                        <p class="text-xs text-slate-500">Filtre suas anotações por data</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <input type="date" id="search-note-date" onchange="renderNotes()" class="p-1.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-700 focus:outline-none">
+                        <button onclick="playClickSound(); clearNoteFilter()" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-bold transition">Ver Todas</button>
+                        <button onclick="playClickSound(); createNote()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-xs shadow-xs transition">+ Nova Nota</button>
+                    </div>
+                </div>
+
+                <div id="notes-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+            </section>
+
+            <section class="pt-6 border-t border-slate-200">
+                <div class="scrapbook-frame p-6 rounded-3xl relative space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
+                        <div>
+                            <span class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-full inline-block font-mono-code">⚡ Projetos & Backlog</span>
+                            <h2 class="text-2xl font-bold text-slate-800 mt-1">🎯 Metas & Aquisições Planejadas</h2>
+                        </div>
+                        <button onclick="playClickSound(); addWishlistItem()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> Adicionar Meta
+                        </button>
+                    </div>
+
+                    <div id="wishlist-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-2"></div>
+                </div>
+            </section>
+        </div>
+
+        <div id="expenses-tab" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">💸 Gestão Financeira</span>
+                        <h2 class="text-2xl font-bold text-slate-800 mt-1">Painel Financeiro & Contas</h2>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="text-xs font-bold text-slate-600">Saldo Atual (R$):</label>
+                        <input type="number" step="0.01" id="fin-input-balance" onchange="updateBalanceDirectly(this.value)" class="p-2 border border-slate-300 rounded-xl font-bold text-emerald-700 w-32 text-xs focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <span class="text-xs font-bold text-slate-600 uppercase">Saldo Inicial</span>
+                        <p id="fin-balance-display" class="text-xl font-bold text-slate-800 mt-1">R$ 0,00</p>
+                    </div>
+                    <div class="bg-rose-50 p-4 rounded-2xl border border-rose-200">
+                        <span class="text-xs font-bold text-rose-700 uppercase">Contas a Pagar</span>
+                        <p id="fin-debts-display" class="text-xl font-bold text-rose-600 mt-1">R$ 0,00</p>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200">
+                        <span class="text-xs font-bold text-amber-700 uppercase">Despesas do Mês</span>
+                        <p id="fin-expenses-display" class="text-xl font-bold text-amber-600 mt-1">R$ 0,00</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-2xl border border-blue-200">
+                        <span class="text-xs font-bold text-blue-700 uppercase">Saldo Líquido</span>
+                        <p id="fin-remaining-display" class="text-xl font-bold text-blue-600 mt-1">R$ 0,00</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <h3 class="font-bold text-slate-800 text-base border-b pb-2">💳 Cadastrar Conta / Boleto</h3>
+                        <form onsubmit="playClickSound(); handleAddDebt(event)" class="space-y-3">
+                            <input type="text" id="debt-title" placeholder="Descrição (Ex: Internet Fibra)" required class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none bg-white">
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="number" step="0.01" id="debt-amount" placeholder="Valor (R$)" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none bg-white">
+                                <input type="text" id="debt-date" placeholder="Vencimento (Ex: 10/09)" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none bg-white">
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs transition">+ Adicionar Conta</button>
+                        </form>
+                        <div id="debts-container" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"></div>
+                    </div>
+
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <h3 class="font-bold text-slate-800 text-base border-b pb-2">💸 Registrar Despesa Avulsa</h3>
+                        <form onsubmit="playClickSound(); handleAddExpense(event)" class="space-y-3">
+                            <input type="text" id="exp-desc" placeholder="Descrição (Ex: Almoço de Negócios)" required class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none bg-white">
+                            <div class="grid grid-cols-3 gap-2">
+                                <input type="number" step="0.01" id="exp-amount" placeholder="Valor (R$)" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none bg-white">
+                                <select id="exp-cat" class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none bg-white">
+                                    <option value="Alimentação">Alimentação</option>
+                                    <option value="Lazer">Lazer</option>
+                                    <option value="Estudos">Estudos</option>
+                                    <option value="Fixos">Fixos</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                                <select id="exp-method" class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none bg-white">
+                                    <option value="Pix">Pix</option>
+                                    <option value="Cartão">Cartão</option>
+                                    <option value="Débito">Débito</option>
+                                    <option value="Dinheiro">Dinheiro</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition">+ Registrar Despesa</button>
+                        </form>
+                        <div id="expenses-container" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="studies-tab" class="tab-content hidden space-y-8">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                <div>
+                    <span class="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">📚 Base de Conhecimento</span>
+                    <h2 class="text-2xl font-bold text-slate-800 mt-1">Notas Rápidas de Estudos & Técnicas</h2>
+                    <p class="text-xs text-slate-500 mt-1">6 blocos fixos para consultas rápidas e direcionamento técnico. ⚙️</p>
+                </div>
+
+                <div id="fixed-study-notes-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-wrap justify-between items-center gap-3 border-b pb-4">
+                    <div>
+                        <span class="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full">🎯 Planejamento Acadêmico</span>
+                        <h2 class="text-2xl font-bold text-slate-800 mt-1">Backlog de Estudos & Progresso</h2>
+                        <p class="text-xs text-slate-500">Adicione conteúdos para estudar e registre o conhecimento adquirido.</p>
+                    </div>
+                    <button onclick="playClickSound(); openStudyModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-plus"></i> Novo Registro
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">📖 Conteúdo na Fila</h3>
+                        <div id="study-topics-container" class="space-y-2 max-h-[350px] overflow-y-auto pr-1"></div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">💡 Conceitos Dominados</h3>
+                        <div id="study-learned-container" class="space-y-2 max-h-[350px] overflow-y-auto pr-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="menu-tab" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <div>
+                        <span class="text-xs font-bold text-cyan-800 bg-cyan-50 border border-cyan-200 px-3 py-1 rounded-full">🥗 Planejamento Nutricional</span>
+                        <h2 class="text-2xl font-bold text-slate-800 mt-1">Dieta Semanal (Segunda a Sexta)</h2>
+                        <p class="text-xs text-slate-500">Refeições estruturadas com opção de edição personalizada.</p>
+                    </div>
+                </div>
+
+                <div id="menu-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+            </div>
+        </div>
+
+        <div id="movies-tab" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                <div>
+                    <span class="text-xs font-bold text-purple-800 bg-purple-50 border border-purple-200 px-3 py-1 rounded-full">🎥 Entretenimento & Leitura</span>
+                    <h2 class="text-2xl font-bold text-slate-800 mt-1">Lista de Filmes, Séries & Documentários</h2>
+                </div>
+
+                <form onsubmit="playClickSound(); handleAddMovie(event)" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-wrap gap-3 items-center">
+                    <input type="text" id="movie-title" placeholder="Nome do Filme, Série ou Livro" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none flex-grow bg-white">
+                    <select id="movie-type" class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none bg-white">
+                        <option value="Filme">Filme</option>
+                        <option value="Série">Série</option>
+                        <option value="Documentário">Documentário</option>
+                    </select>
+                    <button type="submit" class="px-5 py-2.5 bg-slate-800 text-white rounded-xl text-xs font-bold hover:bg-slate-900 transition">+ Adicionar</button>
+                </form>
+
+                <div id="movies-container" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+        </div>
+
+        <div id="birthdays-tab" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+                <div>
+                    <span class="text-xs font-bold text-rose-800 bg-rose-50 border border-rose-200 px-3 py-1 rounded-full">🎂 Prazos & Aniversários</span>
+                    <h2 class="text-2xl font-bold text-slate-800 mt-1">Datas Importantes & Compromissos</h2>
+                </div>
+
+                <form onsubmit="playClickSound(); handleAddBirthday(event)" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-wrap gap-3 items-center">
+                    <input type="text" id="bday-name" placeholder="Evento ou Aniversariante" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none flex-grow bg-white">
+                    <input type="text" id="bday-date" placeholder="Data (Ex: 15/10)" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none flex-grow bg-white">
+                    <button type="submit" class="px-5 py-2.5 bg-rose-600 text-white rounded-xl text-xs font-bold hover:bg-rose-700 transition">+ Adicionar</button>
+                </form>
+
+                <div id="birthdays-container" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+        <button onclick="playBubbleSound(); openMemoryModal()" class="bg-slate-900 hover:bg-blue-600 text-white font-bold p-4 rounded-full shadow-lg flex items-center justify-center transition transform hover:scale-105 border border-slate-700" title="Mini Game de Foco 🎮">
+            <i class="fa-solid fa-gamepad text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Modals -->
+    <div id="routine-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 w-full max-w-xl space-y-4 shadow-xl max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b pb-2">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-clock"></i> Gerenciar Blocos do Dia</h3>
+                <button onclick="playClickSound(); closeRoutineModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-xs text-slate-500 font-medium">Personalize os blocos de horário da sua rotina ideal.</span>
+                <button onclick="playClickSound(); addIdealRoutineItem()" class="px-3 py-1.5 bg-blue-600 text-white rounded-xl text-xs font-bold transition">+ Novo Bloco</button>
+            </div>
+            <div id="routine-editor-container" class="space-y-3 overflow-y-auto flex-grow pr-1"></div>
+            <div class="flex justify-end pt-2 border-t">
+                <button onclick="playClickSound(); closeRoutineModal()" class="px-5 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold">Concluído</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="fixed-study-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 w-full max-w-md space-y-4 shadow-xl">
+            <h3 class="text-lg font-bold text-slate-800">⚙️ Editar Bloco Técnico</h3>
+            <input type="hidden" id="edit-fixed-study-id">
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Título</label>
+                <input type="text" id="modal-fixed-study-title" required class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-bold focus:outline-none bg-white">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Conteúdo / Anotação</label>
+                <textarea id="modal-fixed-study-content" rows="4" required class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none"></textarea>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="playClickSound(); closeFixedStudyModal()" class="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">Cancelar</button>
+                <button onclick="playClickSound(); saveFixedStudyEdit()" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold">Salvar Alteração</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="study-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 w-full max-w-md space-y-4 shadow-xl">
+            <h3 class="text-lg font-bold text-slate-800">📚 Novo Registro Acadêmico</h3>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Categoria</label>
+                <select id="modal-study-type" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-bold focus:outline-none bg-white">
+                    <option value="topic">📖 Conteúdo na Fila</option>
+                    <option value="learned">💡 Conceito Dominado</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Título / Assunto</label>
+                <input type="text" id="modal-study-title" required placeholder="Ex: Arquitetura de Redes ou Algoritmos..." class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="playClickSound(); closeStudyModal()" class="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">Cancelar</button>
+                <button onclick="playClickSound(); saveStudyRecord()" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="memory-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 w-full max-w-lg space-y-4 shadow-xl">
+            <div class="flex items-center justify-between border-b pb-2">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">🎮 Jogo de Memória & Foco</h3>
+                <button onclick="playClickSound(); closeMemoryModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="flex justify-between items-center text-xs font-bold text-slate-600 px-1">
+                <span>Movimentos: <span id="memory-moves" class="text-blue-600">0</span></span>
+                <button onclick="playBubbleSound(); initMemoryGame()" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 rounded-xl transition">Reiniciar</button>
+            </div>
+            <div id="memory-grid" class="grid grid-cols-4 gap-3 py-2"></div>
+            <div class="flex justify-end pt-2">
+                <button onclick="playClickSound(); closeMemoryModal()" class="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="task-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 w-full max-w-md space-y-4 shadow-xl">
+            <h3 class="text-lg font-bold text-slate-800" id="task-modal-title">📋 Adicionar Tarefa</h3>
+            <input type="hidden" id="edit-task-id">
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Horário</label>
+                <input type="time" id="modal-task-time" required class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-bold focus:outline-none focus:border-blue-500">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Descrição</label>
+                <input type="text" id="modal-task-title" required placeholder="Ex: Reunião de planejamento semanal..." class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none focus:border-blue-500">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="playClickSound(); closeTaskModal()" class="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">Cancelar</button>
+                <button onclick="playClickSound(); saveTask()" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 w-full max-w-md space-y-4 shadow-xl">
+            <h3 class="text-lg font-bold text-slate-800" id="menu-modal-title">🥗 Editar Dieta</h3>
+            <input type="hidden" id="edit-menu-day">
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Café da Manhã</label>
+                <input type="text" id="modal-menu-breakfast" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Almoço</label>
+                <input type="text" id="modal-menu-lunch" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Lanche da Tarde</label>
+                <input type="text" id="modal-menu-snack" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 mb-1">Jantar</label>
+                <input type="text" id="modal-menu-dinner" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="playClickSound(); closeMenuModal()" class="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">Cancelar</button>
+                <button onclick="playClickSound(); saveMenuEdit()" class="px-5 py-2 bg-cyan-700 text-white rounded-xl text-xs font-bold">Salvar Alteração</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="trash-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 w-full max-w-2xl space-y-4 shadow-xl max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b pb-2">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-trash"></i> Lixeira de Registros</h3>
+                <button onclick="playClickSound(); closeTrashModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="trash-container" class="space-y-3 overflow-y-auto flex-grow pr-1"></div>
+            <div class="flex justify-between items-center pt-2 border-t">
+                <button onclick="confirmClearTrash()" class="px-4 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl text-xs font-bold transition">Esvaziar Lixeira</button>
+                <button onclick="playClickSound(); closeTrashModal()" class="px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getAudioContext() {
+            window.audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+            return window.audioCtx;
+        }
+
+        function playClickSound() {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(580, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(780, ctx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.08);
+            } catch (e) {}
+        }
+
+        function playSatisfyingSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, index) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + index * 0.06);
+                    gain.gain.setValueAtTime(0.12, now + index * 0.06);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.06 + 0.4);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + index * 0.06);
+                    osc.stop(now + index * 0.06 + 0.4);
+                });
+            } catch (e) {}
+        }
+
+        function playTrashSound() {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(250, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(90, ctx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.15);
+            } catch (e) {}
+        }
+
+        function playBubbleSound() {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.1);
+            } catch (e) {}
+        }
+
+        function triggerLalaMagic(event) {
+            playSatisfyingSound();
+            const rect = event.target.getBoundingClientRect();
+            const originX = rect.left + rect.width / 2;
+            const originY = rect.top + rect.height / 2;
+            const emojis = ['⚡', '🛡️', '💻', '🚀', '⭐', '🔥', '📊'];
+            
+            for (let i = 0; i < 22; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'confetti-particle';
+                particle.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                particle.style.left = `${originX}px`;
+                particle.style.top = `${originY}px`;
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 60 + Math.random() * 140;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance - 80;
+                
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                
+                particle.style.animation = `confettiFall 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards`;
+                particle.style.transform = `translate(${tx}px, ${ty}px)`;
+                
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1200);
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function initHeaderDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const todayStr = new Date().toLocaleDateString('pt-BR', options);
+            document.getElementById('header-date').innerText = todayStr.charAt(0).toUpperCase() + todayStr.slice(1);
+        }
+
+        let calendarDate = new Date();
+        function renderCalendar() {
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            document.getElementById('calendar-month-year').innerText = `${monthNames[month]} ${year}`;
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const lastDay = new Date(year, month + 1, 0).getDate();
+            const daysContainer = document.getElementById('calendar-days');
+            daysContainer.innerHTML = '';
+            
+            const today = new Date();
+            for (let i = 0; i < firstDayIndex; i++) {
+                daysContainer.innerHTML += `<div></div>`;
+            }
+            for (let d = 1; d <= lastDay; d++) {
+                const isToday = (d === today.getDate() && month === today.getMonth() && year === today.getFullYear());
+                const classes = isToday ? "bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center mx-auto font-bold shadow-xs" : "hover:bg-slate-100 rounded-full w-7 h-7 flex items-center justify-center mx-auto transition";
+                daysContainer.innerHTML += `<div><span class="${classes}">${d}</span></div>`;
+            }
+        }
+
+        function changeMonth(dir) {
+            calendarDate.setMonth(calendarDate.getMonth() + dir);
+            renderCalendar();
+        }
+
+        function newQuote() {
+            state.currentQuoteIndex = (state.currentQuoteIndex + 1) % state.quotes.length;
+            document.getElementById('quote-text').innerText = `"${state.quotes[state.currentQuoteIndex]}"`;
+        }
+
+        let state = {
+            idealRoutine: [
+                { id: 1, time: '07:30', title: 'Treino & Cardio 🏋️', subtitle: 'Disposição diária', badgeColor: 'bg-slate-800 text-white', textColor: 'text-white' },
+                { id: 2, time: '09:00', title: 'Foco Profissional 💻', subtitle: 'Demandas e projetos', badgeColor: 'bg-blue-900 text-blue-200', textColor: 'text-blue-200' },
+                { id: 3, time: '14:00', title: 'Reuniões & Alinhamento 📊', subtitle: 'Gestão e equipes', badgeColor: 'bg-slate-800 text-white', textColor: 'text-white' },
+                { id: 4, time: '18:30', title: 'Estudos Técnicos 📚', subtitle: 'Evolução constante', badgeColor: 'bg-amber-950 text-amber-200', textColor: 'text-amber-200' },
+                { id: 5, time: '22:30', title: 'Descanso 🛌', subtitle: 'Recuperação física', badgeColor: 'bg-slate-800 text-white', textColor: 'text-white' }
+            ],
+            tasks: [
+                { id: 1, time: '07:30', title: 'Treino & Cardio 🏋️', completed: false },
+                { id: 2, time: '09:00', title: 'Foco Profissional 💻', completed: false },
+                { id: 3, time: '14:00', title: 'Reuniões & Alinhamento 📊', completed: false },
+                { id: 4, time: '18:30', title: 'Estudos Técnicos 📚', completed: false },
+                { id: 5, time: '22:30', title: 'Descanso 🛌', completed: false }
+            ],
+            notes: [
+                { id: 1, date: '2026-09-02', title: 'Planejamento de Metas', content: 'Revisar os investimentos do trimestre e otimizar o fluxo de entregas de projetos. ⚡', color: 'bg-slate-50 border border-slate-200' },
+                { id: 2, date: '2026-09-02', title: 'Lista de Suprimentos', content: 'Whey protein, creatina, ovos, peito de frango, aveia e café em grãos. ☕', color: 'bg-slate-50 border border-slate-200' }
+            ],
+            fixedStudyNotes: [
+                { id: 1, title: 'Arquitetura de Sistemas', content: 'Revisar padrões de microsserviços e mensageria assíncrona.' },
+                { id: 2, title: 'Produtividade & Foco', content: 'Técnica Pomodoro 50/10 para tarefas complexas.' },
+                { id: 3, title: 'Inglês Técnico', content: 'Estudar vocabulário voltado a documentação de software.' },
+                { id: 4, title: 'Metas do Trimestre', content: 'Finalizar certificação avançada de engenharia.' },
+                { id: 5, title: 'Automação', content: 'Criar scripts para otimizar rotinas repetitivas.' },
+                { id: 6, title: 'Revisão Semanal', content: 'Consolidar aprendizados e ajustar backlog aos sábados.' }
+            ],
+            studyRecords: [],
+            menu: {
+                'Segunda-feira': { breakfast: 'Ovos mexidos, torrada integral e café preto ☕', lunch: 'Arroz, feijão, frango grelhado e salada 🥗', snack: 'Vitamina de banana com aveia e pasta de amendoim 🥜', dinner: 'Omelete recheado com queijo e legumes 🍳' },
+                'Terça-feira': { breakfast: 'Panqueca proteica de aveia e ovos 🥞', lunch: 'Batata doce, carne moida magra e brócolis 🥦', snack: 'Mix de castanhas e uma fruta 🍎', dinner: 'Filé de peixe grelhado com purê de mandioca 🐟' },
+                'Quarta-feira': { breakfast: 'Pão integral com queijo minas e café ☕', lunch: 'Macarrão integral com tiras de frango e molho 🍝', snack: 'Iogurte natural com granola sem açúcar 🥣', dinner: 'Frango desfiado com salada reforçada 🥗' },
+                'Quinta-feira': { breakfast: 'Ovos cozidos e vitamina de frutas 🍌', lunch: 'Arroz integral, feijão e carne assada 🥩', snack: 'Sanduíche natural de frango 🥪', dinner: 'Sopa de legumes com carne 🥣' },
+                'Sexta-feira': { breakfast: 'Tapioca com queijo e ovos mexidos 🍳', lunch: 'Refeição livre planejada ou prato proteico ⚡', snack: 'Frutas com pasta de amendoim 🥜', dinner: 'Pizza caseira integral com frango e requeijão 🍕' }
+            },
+            movies: [
+                { id: 1, title: 'Interestelar 🌌', type: 'Filme' },
+                { id: 2, title: 'Succession 💼', type: 'Série' }
+            ],
+            birthdays: [
+                { id: 1, name: 'Revisão de Impostos 📊', date: '15/09' },
+                { id: 2, name: 'Aniversário do Sócio 🎂', date: '28/09' }
+            ],
+            finances: {
+                balance: 4500.00,
+                debts: [
+                    { id: 1, title: 'Fatura Cartão Corporativo', amount: 1250.00, date: '10/09' }
+                ],
+                expenses: [
+                    { id: 1, desc: 'Café e Almoço', amount: 45.00, cat: 'Alimentação', method: 'Pix' }
+                ]
+            },
+            trash: [],
+            quotes: [
+                "Disciplina é a ponte entre suas metas e suas realizações. Mantenha o foco no objetivo.",
+                "A excelência não é um ato, mas sim um hábito diário. Continue executando com precisão. ⚡",
+                "Construa seu futuro com consistência e estratégia. Cada bloco diário importa.",
+                "O sucesso é a soma de pequenos esforços repetidos dia após dia. Foco total! 🛡️"
+            ],
+            currentQuoteIndex: 0
+        };
+
+        function saveData() {
+            localStorage.setItem('masc_agenda_data_lucas', JSON.stringify(state));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('masc_agenda_data_lucas');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    state = { ...state, ...parsed };
+                } catch (e) {}
+            }
+        }
+
+        function renderIdealRoutine() {
+            const container = document.getElementById('ideal-routine-container');
+            container.innerHTML = '';
+            
+            if (!state.idealRoutine || state.idealRoutine.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 col-span-full text-center py-2">Nenhum bloco configurado.</p>`;
+                return;
+            }
+
+            state.idealRoutine.forEach(item => {
+                container.innerHTML += `
+                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700 flex flex-col justify-between text-center space-y-1 shadow-sm">
+                        <span class="text-[10px] font-bold ${item.textColor || 'text-white'} ${item.badgeColor || 'bg-slate-800'} px-2 py-0.5 rounded-full inline-block mx-auto">${item.time}</span>
+                        <p class="text-xs font-bold text-white">${item.title}</p>
+                        <span class="text-[10px] text-slate-400">${item.subtitle || ''}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function openRoutineModal() {
+            document.getElementById('routine-modal').classList.remove('hidden');
+            renderRoutineEditor();
+        }
+
+        function closeRoutineModal() {
+            document.getElementById('routine-modal').classList.add('hidden');
+            renderIdealRoutine();
+        }
+
+        function renderRoutineEditor() {
+            const container = document.getElementById('routine-editor-container');
+            container.innerHTML = '';
+
+            state.idealRoutine.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 space-y-2 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-slate-700">Bloco #${index + 1}</span>
+                            <button onclick="deleteIdealRoutineItem(${item.id})" class="text-rose-600 hover:text-rose-800 p-1"><i class="fa-solid fa-trash"></i> Excluir</button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="text" id="routine-time-${item.id}" value="${item.time}" placeholder="Horário" onchange="updateIdealRoutineItem(${item.id})" class="p-2 border rounded-xl bg-white font-semibold">
+                            <input type="text" id="routine-title-${item.id}" value="${item.title}" placeholder="Título" onchange="updateIdealRoutineItem(${item.id})" class="p-2 border rounded-xl bg-white font-semibold">
+                        </div>
+                        <input type="text" id="routine-sub-${item.id}" value="${item.subtitle || ''}" placeholder="Subtítulo" onchange="updateIdealRoutineItem(${item.id})" class="w-full p-2 border rounded-xl bg-white font-semibold">
+                    </div>
+                `;
+            });
+        }
+
+        function updateIdealRoutineItem(id) {
+            const time = document.getElementById(`routine-time-${id}`).value;
+            const title = document.getElementById(`routine-title-${id}`).value;
+            const subtitle = document.getElementById(`routine-sub-${id}`).value;
+
+            state.idealRoutine = state.idealRoutine.map(item => {
+                if (item.id === id) {
+                    return { ...item, time, title, subtitle };
+                }
+                return item;
+            });
+            saveData();
+        }
+
+        function addIdealRoutineItem() {
+            const newItem = {
+                id: Date.now(),
+                time: '12:00',
+                title: 'Nova Atividade ⚡',
+                subtitle: 'Foco e execução',
+                badgeColor: 'bg-slate-800 text-white',
+                textColor: 'text-white'
+            };
+            state.idealRoutine.push(newItem);
+            saveData();
+            renderRoutineEditor();
+        }
+
+        function deleteIdealRoutineItem(id) {
+            playTrashSound();
+            state.idealRoutine = state.idealRoutine.filter(item => item.id !== id);
+            saveData();
+            renderRoutineEditor();
+        }
+
+        function renderTasks() {
+            const container = document.getElementById('routine-list');
+            container.innerHTML = '';
+            
+            if (state.tasks.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">Nenhuma tarefa na lista. Adicione uma nova atividade acima! ⚡</p>`;
+                document.getElementById('routine-progress-bar').style.width = '0%';
+                document.getElementById('routine-progress-percent').innerText = '0%';
+                document.getElementById('complete-day-container').classList.add('hidden');
+                return;
+            }
+
+            let completedCount = 0;
+            state.tasks.forEach(task => {
+                if (task.completed) completedCount++;
+                
+                container.innerHTML += `
+                    <div id="task-card-${task.id}" onclick="toggleTaskActions(${task.id})" class="bg-white p-3.5 rounded-2xl border ${task.completed ? 'border-emerald-300 bg-emerald-50/40' : 'border-slate-200'} flex items-center justify-between shadow-xs card-fofo cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" ${task.completed ? 'checked' : ''} onclick="event.stopPropagation(); toggleTask(${task.id})" class="w-5 h-5 accent-emerald-600 rounded-md cursor-pointer">
+                            <div>
+                                <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">${task.time}</span>
+                                <p class="text-xs font-bold text-slate-800 mt-1">${task.title}</p>
+                            </div>
+                        </div>
+                        <div id="task-actions-${task.id}" class="hidden flex items-center gap-2">
+                            <button onclick="event.stopPropagation(); editTask(${task.id})" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition" title="Editar Tarefa">
+                                <i class="fa-solid fa-pen"></i> Editar
+                            </button>
+                            <button onclick="event.stopPropagation(); deleteTask(${task.id})" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-xl text-xs transition" title="Excluir Tarefa">
+                                <i class="fa-solid fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const percent = Math.round((completedCount / state.tasks.length) * 100);
+            document.getElementById('routine-progress-bar').style.width = `${percent}%`;
+            document.getElementById('routine-progress-percent').innerText = `${percent}%`;
+
+            const completeContainer = document.getElementById('complete-day-container');
+            if (percent === 100 && state.tasks.length > 0) {
+                completeContainer.classList.remove('hidden');
+            } else {
+                completeContainer.classList.add('hidden');
+            }
+        }
+
+        function toggleTaskActions(id) {
+            playClickSound();
+            const actionsEl = document.getElementById(`task-actions-${id}`);
+            const isHidden = actionsEl.classList.contains('hidden');
+
+            document.querySelectorAll('[id^="task-actions-"]').forEach(el => el.classList.add('hidden'));
+
+            if (isHidden) {
+                actionsEl.classList.remove('hidden');
+            } else {
+                actionsEl.classList.add('hidden');
+            }
+        }
+
+        function toggleTask(id) {
+            const task = state.tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                if (task.completed) playSatisfyingSound();
+                else playClickSound();
+                saveData();
+                renderTasks();
+            }
+        }
+
+        function openTaskModal(id = null) {
+            document.getElementById('edit-task-id').value = '';
+            document.getElementById('modal-task-time').value = '';
+            document.getElementById('modal-task-title').value = '';
+
+            if (id) {
+                const task = state.tasks.find(t => t.id === id);
+                if (task) {
+                    document.getElementById('edit-task-id').value = task.id;
+                    document.getElementById('modal-task-time').value = task.time;
+                    document.getElementById('modal-task-title').value = task.title;
+                    document.getElementById('task-modal-title').innerText = "📋 Editar Tarefa";
+                }
+            } else {
+                document.getElementById('task-modal-title').innerText = "📋 Adicionar Tarefa";
+            }
+            document.getElementById('task-modal').classList.remove('hidden');
+        }
+
+        function closeTaskModal() {
+            document.getElementById('task-modal').classList.add('hidden');
+        }
+
+        function saveTask() {
+            const id = document.getElementById('edit-task-id').value;
+            const time = document.getElementById('modal-task-time').value;
+            const title = document.getElementById('modal-task-title').value;
+
+            if (!time || !title) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            if (id) {
+                state.tasks = state.tasks.map(t => t.id == id ? { ...t, time, title } : t);
+            } else {
+                state.tasks.push({ id: Date.now(), time, title, completed: false });
+            }
+
+            saveData();
+            closeTaskModal();
+            renderTasks();
+        }
+
+        function editTask(id) {
+            openTaskModal(id);
+        }
+
+        function deleteTask(id) {
+            playTrashSound();
+            const task = state.tasks.find(t => t.id === id);
+            if (task) {
+                state.trash.push({ ...task, trashType: 'Tarefa da Rotina', deletedAt: new Date().toLocaleDateString('pt-BR') });
+                state.tasks = state.tasks.filter(t => t.id !== id);
+                saveData();
+                renderTasks();
+                updateTrashBadge();
+            }
+        }
+
+        function archiveCompletedDay() {
+            playSatisfyingSound();
+            state.tasks.forEach(task => {
+                state.trash.push({ ...task, trashType: 'Tarefa da Rotina (Concluída)', deletedAt: new Date().toLocaleDateString('pt-BR') });
+            });
+            state.tasks = [];
+            saveData();
+            renderTasks();
+            updateTrashBadge();
+            alert("Ciclo concluído com sucesso! As tarefas foram limpas e você pode iniciar uma nova lista! 🚀");
+        }
+
+        function renderNotes() {
+            const container = document.getElementById('notes-container');
+            const filterDate = document.getElementById('search-note-date').value;
+            container.innerHTML = '';
+            
+            let notesList = state.notes;
+            if (filterDate) {
+                notesList = notesList.filter(n => n.date === filterDate);
+            }
+
+            if (notesList.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 col-span-3 text-center py-6">Nenhuma nota encontrada.</p>`;
+                return;
+            }
+
+            notesList.forEach(note => {
+                container.innerHTML += `
+                    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm relative card-fofo flex flex-col justify-between space-y-3">
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full">${note.date}</span>
+                                <div class="flex gap-1">
+                                    <button onclick="deleteNote(${note.id})" class="text-rose-500 hover:text-rose-700 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-base mt-1">${note.title}</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed font-medium">${note.content}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function createNote() {
+            const title = prompt("Título da Nota / Lembrete:");
+            if (!title) return;
+            const content = prompt("Conteúdo da Anotação:");
+            if (!content) return;
+            const today = new Date().toISOString().split('T')[0];
+
+            state.notes.push({ id: Date.now(), date: today, title, content });
+            saveData();
+            renderNotes();
+        }
+
+        function deleteNote(id) {
+            playTrashSound();
+            const note = state.notes.find(n => n.id === id);
+            if (note) {
+                state.trash.push({ ...note, trashType: 'Nota / Lembrete', deletedAt: new Date().toLocaleDateString('pt-BR') });
+                state.notes = state.notes.filter(n => n.id !== id);
+                saveData();
+                renderNotes();
+                updateTrashBadge();
+            }
+        }
+
+        function clearNoteFilter() {
+            document.getElementById('search-note-date').value = '';
+            renderNotes();
+        }
+
+        function renderWishlist() {
+            const container = document.getElementById('wishlist-container');
+            container.innerHTML = '';
+            if (!state.wishlist || state.wishlist.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 col-span-3 text-center py-4">Nenhuma meta cadastrada.</p>`;
+                return;
+            }
+            state.wishlist.forEach(item => {
+                container.innerHTML += `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 flex items-center justify-between shadow-xs">
+                        <div>
+                            <span class="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">${item.store}</span>
+                            <p class="text-xs font-bold text-slate-800 mt-1">${item.title}</p>
+                            <p class="text-xs font-extrabold text-emerald-700 mt-0.5">${item.price}</p>
+                        </div>
+                        <button onclick="deleteWishlistItem(${item.id})" class="text-rose-500 hover:text-rose-700 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+
+        function addWishlistItem() {
+            const title = prompt("Nome da Meta / Projeto / Aquisição:");
+            if (!title) return;
+            const price = prompt("Valor (Ex: R$ 149,90):") || "R$ 0,00";
+            const store = prompt("Categoria / Local (Ex: Equipamentos, Investimento):") || "Geral";
+            if (!state.wishlist) state.wishlist = [];
+            state.wishlist.push({ id: Date.now(), title, price, store });
+            saveData();
+            renderWishlist();
+        }
+
+        function deleteWishlistItem(id) {
+            playTrashSound();
+            const item = state.wishlist.find(i => i.id === id);
+            if (item) {
+                state.trash.push({ ...item, trashType: 'Meta / Aquisição', deletedAt: new Date().toLocaleDateString('pt-BR') });
+                state.wishlist = state.wishlist.filter(i => i.id !== id);
+                saveData();
+                renderWishlist();
+                updateTrashBadge();
+            }
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '';
+            const days = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira'];
+            days.forEach(day => {
+                const menuDay = state.menu[day] || { breakfast: '-', lunch: '-', snack: '-', dinner: '-' };
+                container.innerHTML += `
+                    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3 flex flex-col justify-between card-fofo">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <h3 class="font-bold text-slate-800 text-sm">📅 ${day}</h3>
+                                <button onclick="openMenuModal('${day}')" class="text-xs bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-xl font-bold text-slate-700 transition">Editar</button>
+                            </div>
+                            <div class="space-y-1.5 text-xs">
+                                <p><strong>☕ Café:</strong> <span class="text-slate-600">${menuDay.breakfast}</span></p>
+                                <p><strong>🍲 Almoço:</strong> <span class="text-slate-600">${menuDay.lunch}</span></p>
+                                <p><strong>🍎 Lanche:</strong> <span class="text-slate-600">${menuDay.snack}</span></p>
+                                <p><strong>🥗 Jantar:</strong> <span class="text-slate-600">${menuDay.dinner}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openMenuModal(day) {
+            playClickSound();
+            document.getElementById('edit-menu-day').value = day;
+            document.getElementById('menu-modal-title').innerText = `🥗 Editar Dieta: ${day}`;
+            const m = state.menu[day] || { breakfast: '', lunch: '', snack: '', dinner: '' };
+            document.getElementById('modal-menu-breakfast').value = m.breakfast;
+            document.getElementById('modal-menu-lunch').value = m.lunch;
+            document.getElementById('modal-menu-snack').value = m.snack;
+            document.getElementById('modal-menu-dinner').value = m.dinner;
+            document.getElementById('menu-modal').classList.remove('hidden');
+        }
+
+        function closeMenuModal() {
+            document.getElementById('menu-modal').classList.add('hidden');
+        }
+
+        function saveMenuEdit() {
+            const day = document.getElementById('edit-menu-day').value;
+            state.menu[day] = {
+                breakfast: document.getElementById('modal-menu-breakfast').value,
+                lunch: document.getElementById('modal-menu-lunch').value,
+                snack: document.getElementById('modal-menu-snack').value,
+                dinner: document.getElementById('modal-menu-dinner').value
+            };
+            saveData();
+            closeMenuModal();
+            renderMenu();
+        }
+
+        function renderMovies() {
+            const container = document.getElementById('movies-container');
+            container.innerHTML = '';
+            if (state.movies.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 col-span-2 text-center py-4">Nenhum item na lista.</p>`;
+                return;
+            }
+            state.movies.forEach(m => {
+                container.innerHTML += `
+                    <div class="bg-white p-3 rounded-2xl border border-slate-200 flex justify-between items-center text-xs shadow-xs">
+                        <div>
+                            <span class="text-[10px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full">${m.type}</span>
+                            <p class="font-bold text-slate-800 mt-1">${m.title}</p>
+                        </div>
+                        <button onclick="deleteMovie(${m.id})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+
+        function handleAddMovie(e) {
+            e.preventDefault();
+            const title = document.getElementById('movie-title').value;
+            const type = document.getElementById('movie-type').value;
+            state.movies.push({ id: Date.now(), title, type });
+            saveData();
+            renderMovies();
+            e.target.reset();
+        }
+
+        function deleteMovie(id) {
+            playTrashSound();
+            const m = state.movies.find(item => item.id === id);
+            if (m) {
+                state.trash.push({ ...m, trashType: 'Mídia / Leitura', deletedAt: new Date().toLocaleDateString('pt-BR') });
+                state.movies = state.movies.filter(item => item.id !== id);
+                saveData();
+                renderMovies();
+                updateTrashBadge();
+            }
+        }
+
+        function renderBirthdays() {
+            const container = document.getElementById('birthdays-container');
+            container.innerHTML = '';
+            if (state.birthdays.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 col-span-2 text-center py-4">Nenhum evento cadastrado.</p>`;
+                return;
+            }
+            state.birthdays.forEach(b => {
+                container.innerHTML += `
+                    <div class="bg-white p-3 rounded-2xl border border-slate-200 flex justify-between items-center text-xs shadow-xs">
+                        <div>
+                            <span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">${b.date}</span>
+                            <p class="font-bold text-slate-800 mt-1">${b.name}</p>
+                        </div>
+                        <button onclick="deleteBirthday(${b.id})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+
+        function handleAddBirthday(e) {
+            e.preventDefault();
+            const name = document.getElementById('bday-name').value;
+            const date = document.getElementById('bday-date').value;
+            state.birthdays.push({ id: Date.now(), name, date });
+            saveData();
+            renderBirthdays();
+            e.target.reset();
+        }
+
+        function deleteBirthday(id) {
+            playTrashSound();
+            const b = state.birthdays.find(item => item.id === id);
+            if (b) {
+                state.trash.push({ ...b, trashType: 'Prazo / Evento', deletedAt: new Date().toLocaleDateString('pt-BR') });
+                state.birthdays = state.birthdays.filter(item => item.id !== id);
+                saveData();
+                renderBirthdays();
+                updateTrashBadge();
+            }
+        }
+
+        let memoryCards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let memoryMoves = 0;
+        let isProcessingMemory = false;
+
+        function openMemoryModal() {
+            document.getElementById('memory-modal').classList.remove('hidden');
+            initMemoryGame();
+        }
+
+        function closeMemoryModal() {
+            document.getElementById('memory-modal').classList.add('hidden');
+        }
+
+        function initMemoryGame() {
+            const symbols = ['⚡', '🛡️', '💻', '🚀', '📊', '⚙️'];
+            let deck = [...symbols, ...symbols]
+                .sort(() => Math.random() - 0.5)
+                .map((symbol, index) => ({ id: index, symbol, flipped: false, matched: false }));
+            memoryCards = deck;
+            flippedCards = [];
+            matchedPairs = 0;
+            memoryMoves = 0;
+            isProcessingMemory = false;
+            document.getElementById('memory-moves').innerText = memoryMoves;
+            renderMemoryGrid();
+        }
+
+        function renderMemoryGrid() {
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            memoryCards.forEach(card => {
+                const isFlipped = card.flipped || card.matched;
+                grid.innerHTML += `
+                    <div onclick="flipMemoryCard(${card.id})" class="memory-card h-16 cursor-pointer relative">
+                        <div class="memory-card-inner absolute inset-0 ${isFlipped ? 'flipped' : ''}">
+                            <div class="memory-card-front bg-slate-100 border border-slate-300 rounded-2xl flex items-center justify-center text-xl shadow-xs">⚡</div>
+                            <div class="memory-card-back bg-slate-900 text-white border border-slate-700 rounded-2xl flex items-center justify-center text-2xl shadow-xs">${card.symbol}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function flipMemoryCard(id) {
+            if (isProcessingMemory) return;
+            const card = memoryCards.find(c => c.id === id);
+            if (!card || card.flipped || card.matched || flippedCards.length >= 2) return;
+            
+            playClickSound();
+            card.flipped = true;
+            flippedCards.push(card);
+            renderMemoryGrid();
+
+            if (flippedCards.length === 2) {
+                memoryMoves++;
+                document.getElementById('memory-moves').innerText = memoryMoves;
+                const [c1, c2] = flippedCards;
+                if (c1.symbol === c2.symbol) {
+                    c1.matched = true;
+                    c2.matched = true;
+                    matchedPairs++;
+                    flippedCards = [];
+                    playSatisfyingSound();
+                    if (matchedPairs === 6) {
+                        setTimeout(() => alert(`🎉 Excelente! Jogo concluído em ${memoryMoves} movimentos! ⚡`), 300);
+                    }
+                } else {
+                    isProcessingMemory = true;
+                    setTimeout(() => {
+                        c1.flipped = false;
+                        c2.flipped = false;
+                        flippedCards = [];
+                        isProcessingMemory = false;
+                        renderMemoryGrid();
+                    }, 700);
+                }
+            }
+        }
+
+        function renderFinances() {
+            document.getElementById('fin-input-balance').value = state.finances.balance.toFixed(2);
+            document.getElementById('fin-balance-display').innerText = `R$ ${state.finances.balance.toFixed(2)}`;
+            
+            let totalDebts = 0;
+            const debtsContainer = document.getElementById('debts-container');
+            debtsContainer.innerHTML = '';
+            state.finances.debts.forEach(d => {
+                totalDebts += d.amount;
+                debtsContainer.innerHTML += `
+                    <div class="bg-white p-2.5 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
+                        <div>
+                            <span class="font-bold text-slate-800">${d.title}</span>
+                            <span class="text-[10px] text-rose-600 block">Vencimento: ${d.date} • R$ ${d.amount.toFixed(2)}</span>
+                        </div>
+                        <button onclick="deleteDebt(${d.id})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            document.getElementById('fin-debts-display').innerText = `R$ ${totalDebts.toFixed(2)}`;
+
+            let totalExpenses = 0;
+            const expContainer = document.getElementById('expenses-container');
+            expContainer.innerHTML = '';
+            state.finances.expenses.forEach(e => {
+                totalExpenses += e.amount;
+                expContainer.innerHTML += `
+                    <div class="bg-white p-2.5 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
+                        <div>
+                            <span class="font-bold text-slate-800">${e.desc}</span>
+                            <span class="text-[10px] text-emerald-700 block">${e.cat} (${e.method}) • R$ ${e.amount.toFixed(2)}</span>
+                        </div>
+                        <button onclick="deleteExpense(${e.id})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            document.getElementById('fin-expenses-display').innerText = `R$ ${totalExpenses.toFixed(2)}`;
+
+            const remaining = state.finances.balance - totalDebts - totalExpenses;
+            const remDisplay = document.getElementById('fin-remaining-display');
+            remDisplay.innerText = `R$ ${remaining.toFixed(2)}`;
+            remDisplay.className = remaining >= 0 ? "text-xl font-bold text-blue-600 mt-1" : "text-xl font-bold text-rose-600 mt-1";
+        }
+
+        function updateBalanceDirectly(val) {
+            state.finances.balance = parseFloat(val) || 0;
+            saveData();
+            renderFinances();
+        }
+
+        function handleAddDebt(e) {
+            e.preventDefault();
+            const title = document.getElementById('debt-title').value;
+            const amount = parseFloat(document.getElementById('debt-amount').value);
+            const date = document.getElementById('debt-date').value;
+            state.finances.debts.push({ id: Date.now(), title, amount, date });
+            saveData();
+            renderFinances();
+            e.target.reset();
+        }
+
+        function deleteDebt(id) {
+            playTrashSound();
+            const d = state.finances.debts.find(item => item.id === id);
+            if (d) {
+                state.trash.push({ ...d, trashType: 'Conta / Dívida', deletedAt: new Date().toLocaleDateString('pt-BR') });
+                state.finances.debts = state.finances.debts.filter(item => item.id !== id);
+                saveData();
+                renderFinances();
+                updateTrashBadge();
+            }
+        }
+
+        function handleAddExpense(e) {
+            e.preventDefault();
+            const desc = document.getElementById('exp-desc').value;
+            const amount = parseFloat(document.getElementById('exp-amount').value);
+            const cat = document.getElementById('exp-cat').value;
+            const method = document.getElementById('exp-method').value;
+            state.finances.expenses.push({ id: Date.now(), desc, amount, cat, method });
+            saveData();
+            renderFinances();
+            e.target.reset();
+        }
+
+        function deleteExpense(id) {
+            playTrashSound();
+            const exp = state.finances.expenses.find(item => item.id === id);
+            if (exp) {
+                state.trash.push({ ...exp, trashType: 'Despesa Avulsa', deletedAt: new Date().toLocaleDateString('pt-BR') });
+                state.finances.expenses = state.finances.expenses.filter(item => item.id !== id);
+                saveData();
+                renderFinances();
+                updateTrashBadge();
+            }
+        }
+
+        function renderStudies() {
+            const fixedContainer = document.getElementById('fixed-study-notes-container');
+            fixedContainer.innerHTML = '';
+            
+            state.fixedStudyNotes.forEach((note, index) => {
+                fixedContainer.innerHTML += `
+                    <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm relative card-fofo flex flex-col justify-between space-y-3">
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">Bloco #${index+1}</span>
+                                <button onclick="openFixedStudyModal(${note.id})" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-xl transition shadow-xs">Editar</button>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-sm mt-1">${note.title}</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed font-medium">${note.content}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const topicsContainer = document.getElementById('study-topics-container');
+            const learnedContainer = document.getElementById('study-learned-container');
+            topicsContainer.innerHTML = '';
+            learnedContainer.innerHTML = '';
+
+            state.studyRecords.forEach(rec => {
+                const html = `
+                    <div class="bg-white p-2.5 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
+                        <span class="font-semibold text-slate-800">${rec.title}</span>
+                        <button onclick="deleteStudyRecord(${rec.id})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                if (rec.type === 'topic') {
+                    topicsContainer.innerHTML += html;
+                } else {
+                    learnedContainer.innerHTML += html;
+                }
+            });
+        }
+
+        function openFixedStudyModal(id) {
+            playClickSound();
+            const note = state.fixedStudyNotes.find(n => n.id === id);
+            if (note) {
+                document.getElementById('edit-fixed-study-id').value = note.id;
+                document.getElementById('modal-fixed-study-title').value = note.title;
+                document.getElementById('modal-fixed-study-content').value = note.content;
+                document.getElementById('fixed-study-modal').classList.remove('hidden');
+            }
+        }
+
+        function closeFixedStudyModal() {
+            document.getElementById('fixed-study-modal').classList.add('hidden');
+        }
+
+        function saveFixedStudyEdit() {
+            const id = parseInt(document.getElementById('edit-fixed-study-id').value);
+            const title = document.getElementById('modal-fixed-study-title').value;
+            const content = document.getElementById('modal-fixed-study-content').value;
+            if (!title || !content) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+            state.fixedStudyNotes = state.fixedStudyNotes.map(n => n.id === id ? { ...n, title, content } : n);
+            saveData();
+            closeFixedStudyModal();
+            renderStudies();
+        }
+
+        function openStudyModal() {
+            document.getElementById('modal-study-title').value = '';
+            document.getElementById('study-modal').classList.remove('hidden');
+        }
+
+        function closeStudyModal() {
+            document.getElementById('study-modal').classList.add('hidden');
+        }
+
+        function saveStudyRecord() {
+            const type = document.getElementById('modal-study-type').value;
+            const title = document.getElementById('modal-study-title').value;
+            if (!title) return;
+            state.studyRecords.push({ id: Date.now(), type, title });
+            saveData();
+            closeStudyModal();
+            renderStudies();
+        }
+
+        function deleteStudyRecord(id) {
+            playTrashSound();
+            const rec = state.studyRecords.find(r => r.id === id);
+            if (rec) {
+                state.trash.push({ ...rec, trashType: 'Registro Acadêmico', deletedAt: new Date().toLocaleDateString('pt-BR') });
+                state.studyRecords = state.studyRecords.filter(r => r.id !== id);
+                saveData();
+                renderStudies();
+                updateTrashBadge();
+            }
+        }
+
+        function openTrashModal() {
+            document.getElementById('trash-modal').classList.remove('hidden');
+            renderTrash();
+        }
+
+        function closeTrashModal() {
+            document.getElementById('trash-modal').classList.add('hidden');
+        }
+
+        function updateTrashBadge() {
+            const badge = document.getElementById('trash-badge');
+            if (state.trash.length > 0) {
+                badge.innerText = state.trash.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function renderTrash() {
+            const container = document.getElementById('trash-container');
+            container.innerHTML = '';
+            if (state.trash.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">A lixeira está vazia. ⚡</p>`;
+                return;
+            }
+            state.trash.forEach(item => {
+                const id = item.id;
+                container.innerHTML += `
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex justify-between items-center text-xs">
+                        <div>
+                            <span class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">${item.trashType}</span>
+                            <p class="font-bold text-slate-800 mt-1">${item.title || item.desc || item.name || 'Item'}</p>
+                            <span class="text-[10px] text-slate-400">Excluído em: ${item.deletedAt || 'Hoje'}</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="restoreTrashItem(${id})" class="px-3 py-1.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold rounded-xl transition">Restaurar</button>
+                            <button onclick="deleteTrashItemPermanently(${id})" class="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold rounded-xl transition">Excluir</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteTrashItemPermanently(id) {
+            playTrashSound();
+            state.trash = state.trash.filter(i => i.id !== id);
+            saveData();
+            renderTrash();
+            updateTrashBadge();
+        }
+
+        function restoreTrashItem(id) {
+            playSatisfyingSound();
+            const item = state.trash.find(i => i.id === id);
+            if (!item) return;
+
+            if (item.trashType === 'Tarefa da Rotina' || item.trashType === 'Tarefa da Rotina (Concluída)') {
+                state.tasks.push({ id: item.id, time: item.time, title: item.title, completed: false });
+            } else if (item.trashType === 'Nota / Lembrete') state.notes.push(item);
+            else if (item.trashType === 'Mídia / Leitura') state.movies.push(item);
+            else if (item.trashType === 'Conta / Dívida') state.finances.debts.push(item);
+            else if (item.trashType === 'Despesa Avulsa') state.finances.expenses.push(item);
+            else if (item.trashType === 'Prazo / Evento') state.birthdays.push(item);
+            else if (item.trashType === 'Meta / Aquisição') state.wishlist.push(item);
+            else if (item.trashType === 'Registro Acadêmico') state.studyRecords.push(item);
+
+            state.trash = state.trash.filter(i => i.id !== id);
+            saveData();
+            renderTrash();
+            renderTasks();
+            renderNotes();
+            renderWishlist();
+            renderStudies();
+            renderFinances();
+            renderMovies();
+            renderBirthdays();
+            updateTrashBadge();
+        }
+
+        function confirmClearTrash() {
+            if (confirm("Tem certeza que deseja esvaziar permanentemente a lixeira?")) {
+                state.trash = [];
+                saveData();
+                renderTrash();
+                updateTrashBadge();
+            }
+        }
+
+        window.onload = function() {
+            loadData();
+            initHeaderDate();
+            renderCalendar();
+            renderIdealRoutine();
+            renderTasks();
+            renderNotes();
+            renderWishlist();
+            renderStudies();
+            renderMenu();
+            renderFinances();
+            renderMovies();
+            renderBirthdays();
+            updateTrashBadge();
+        };
+    </script>
+</body>
+</html>
