@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <link rel="icon" href="favorito.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Agenda Vintage & Fofa 🌸</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;600;700&family=Special+Elite&family=Italianno&family=Dancing+Script&family=Playfair+Display:ital@1&family=Indie+Flower&family=Reenie+Beanie&family=Amatic+SC:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'fofo-pink': '#f7cad0',
+                        'fofo-pink-dark': '#e07a5f',
+                        'fofo-lavender': '#e2ece9',
+                        'fofo-purple': '#d8bbff',
+                        'fofo-mint': '#d8f3dc',
+                        'fofo-peach': '#ffdac1',
+                        'fofo-yellow': '#fff1e6',
+                    },
+                    fontFamily: {
+                        'fredoka': ['Fredoka', 'sans-serif'],
+                        'quicksand': ['Quicksand', 'sans-serif'],
+                        'scrapbook': ['Caveat', 'cursive'],
+                        'special-elite': ['Special Elite', 'monospace'],
+                        'italianno': ['Italianno', 'cursive'],
+                        'dancing': ['Dancing Script', 'cursive'],
+                        'playfair': ['Playfair Display', 'serif'],
+                        'indie': ['Indie Flower', 'cursive'],
+                        'reenie': ['Reenie Beanie', 'cursive'],
+                        'amatic': ['Amatic SC', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #fcf8f2;
+            background-image: radial-gradient(#f7cad0 1.2px, transparent 1.2px);
+            background-size: 20px 20px;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Fredoka', sans-serif; }
+        .font-scrapbook { font-family: 'Caveat', cursive; }
+
+        .tape-effect { position: relative; }
+        .tape-effect::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-2deg);
+            width: 90px;
+            height: 22px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px dashed rgba(224, 122, 95, 0.4);
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .scrapbook-frame {
+            border: 3px dashed #e07a5f;
+            background-color: #fffef9;
+            box-shadow: 6px 6px 0px #f7cad0;
+            position: relative;
+        }
+
+        .card-fofo { transition: all 0.2s ease; }
+        .card-fofo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px -4px rgba(224, 122, 95, 0.25);
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: translateY(85vh) rotate(720deg) scale(1.2); opacity: 0; }
+        }
+        .confetti-particle {
+            position: fixed;
+            z-index: 99999;
+            pointer-events: none;
+            animation: confettiFall 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        /* Estilos aba Colagem */
+        .cartao-papiro {
+            position: relative;
+            width: 100%;
+            min-height: 400px;
+            background-size: cover;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 1px solid #d4b996;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+        }
+        .moldura-costura {
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px dashed rgba(139,69,19,0.3);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .decor-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 5px 10px;
+            font-size: 22px;
+            filter: sepia(0.5);
+            z-index: 2;
+        }
+        #caixa-texto-papiro {
+            width: 100%;
+            min-height: 120px;
+            background: transparent;
+            border: none;
+            outline: none;
+            text-align: center;
+            font-size: 1.2rem;
+            resize: none;
+            line-height: 1.5;
+            z-index: 10;
+            margin: 20px 0;
+            overflow: visible;
+            white-space: pre-wrap;
+            word-break: break-word;
+            flex-grow: 1;
+        }
+        #area-fotos-dinamica {
+            display: flex;
+            gap: 12px;
+            margin: 15px 0;
+            z-index: 10;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .foto-mini {
+            position: relative;
+            background: #fdfdfd;
+            padding: 4px 4px 18px 4px;
+            box-shadow: 3px 4px 8px rgba(0,0,0,0.25);
+            border: 1px solid #e0d5c1;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 75px; 
+            height: 95px;
+            transition: width 0.2s ease, height 0.2s ease;
+        }
+        .foto-mini img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+
+        /* Temas */
+        body.theme-t1 {
+            background-color: #fcf8f2;
+            background-image: radial-gradient(#f7cad0 1.2px, transparent 1.2px);
+            color: #475569;
+        }
+        
+        /* Tema Noturno */
+        body.theme-t4 {
+            background-color: #000000 !important;
+            background-image: none !important;
+            color: #ffffff !important;
+        }
+        body.theme-t4 header, 
+        body.theme-t4 .bg-white, 
+        body.theme-t4 .bg-slate-50, 
+        body.theme-t4 div[id$="-tab"] > div,
+        body.theme-t4 section,
+        body.theme-t4 div[id$="-container"] > div {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            border-color: #00ffff !important;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3) !important;
+        }
+        
+        body.theme-t4 .bg-fofo-yellow, 
+        body.theme-t4 .bg-fofo-peach, 
+        body.theme-t4 .bg-fofo-mint, 
+        body.theme-t4 .bg-fofo-lavender,
+        body.theme-t4 .bg-emerald-50,
+        body.theme-t4 .bg-rose-50,
+        body.theme-t4 .bg-amber-50,
+        body.theme-t4 .bg-purple-50,
+        body.theme-t4 .bg-white\/90,
+        body.theme-t4 .bg-white\/85,
+        body.theme-t4 .bg-white\/80 {
+            background-color: #000000 !important;
+            border: 1px solid #ff00ff !important;
+            box-shadow: 0 0 8px rgba(255, 0, 255, 0.4) !important;
+            color: #ffffff !important;
+        }
+
+        body.theme-t4 h1, body.theme-t4 h2, body.theme-t4 h3, body.theme-t4 h4, 
+        body.theme-t4 p, body.theme-t4 span, body.theme-t4 label, body.theme-t4 strong,
+        body.theme-t4 input, body.theme-t4 select, body.theme-t4 textarea {
+            color: #ffffff !important;
+            text-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+        }
+        body.theme-t4 input, body.theme-t4 select, body.theme-t4 textarea {
+            background-color: #111827 !important;
+            border-color: #ff00ff !important;
+            box-shadow: 0 0 8px rgba(255, 0, 255, 0.4) !important;
+            color: #ffffff !important;
+        }
+        body.theme-t4 .scrapbook-frame {
+            border-color: #00ffff !important;
+            box-shadow: 6px 6px 0px #ff00ff !important;
+            background-color: #000000 !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-12 flex flex-col justify-between selection:bg-fofo-pink selection:text-slate-800 theme-t1">
+
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-4 border-fofo-pink shadow-xs">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="playClickSound(); switchTab('main-tab')">
+                <div class="w-11 h-11 bg-fofo-pink rounded-2xl flex items-center justify-center text-2xl shadow-xs">🌷</div>
+                <div>
+                    <h1 class="text-2xl font-bold text-fofo-pink-dark tracking-wide flex items-center gap-2">
+                        Meu Cantinho Vintage <span class="text-xs bg-fofo-peach text-amber-900 px-2.5 py-0.5 rounded-full font-normal">Agenda & Notas ✨</span>
+                    </h1>
+                    <div class="flex items-center gap-2">
+                        <p class="text-xs text-slate-400 font-medium" id="header-date">Carregando data...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="playClickSound(); cycleThemeMode()" id="btn-theme-selector" class="px-3 py-2 rounded-2xl bg-fofo-purple hover:bg-purple-300 text-purple-950 font-bold text-xs transition shadow-xs flex items-center gap-1.5" title="Alternar Modo Claro / Noturno">
+                    ☀️
+                </button>
+                <button onclick="playClickSound(); switchTab('main-tab')" class="px-3 py-2 rounded-2xl bg-fofo-pink/40 hover:bg-fofo-pink text-slate-800 font-bold text-xs transition shadow-xs">
+                    🏠 Inicio
+                </button>
+                <button onclick="playClickSound(); switchTab('expenses-tab')" class="px-3 py-2 rounded-2xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 font-bold text-xs transition shadow-xs">
+                    💸 Finanças
+                </button>
+                <button onclick="playClickSound(); switchTab('studies-tab')" class="px-3 py-2 rounded-2xl bg-fofo-peach hover:bg-amber-200 text-amber-900 font-bold text-xs transition shadow-xs">
+                    📚 Estudos
+                </button>
+                <button onclick="playClickSound(); switchTab('menu-tab')" class="px-3 py-2 rounded-2xl bg-fofo-mint hover:bg-emerald-200 text-emerald-900 font-bold text-xs transition shadow-xs">
+                    🥦 Cardápio
+                </button>
+                <button onclick="playClickSound(); switchTab('movies-tab')" class="px-3 py-2 rounded-2xl bg-fofo-purple/50 hover:bg-fofo-purple text-purple-900 font-bold text-xs transition shadow-xs">
+                    🎥 Filmes & Séries
+                </button>
+                <button onclick="playClickSound(); switchTab('birthdays-tab')" class="px-3 py-2 rounded-2xl bg-rose-100 hover:bg-rose-200 text-rose-900 font-bold text-xs transition shadow-xs">
+                    🎂 Aniversários
+                </button>
+                <button onclick="playClickSound(); switchTab('colagem-tab')" class="px-3 py-2 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs transition shadow-xs">
+                    📜 Colagem
+                </button>
+                <button onclick="playClickSound(); openPasswordSettingModal()" class="px-3 py-2 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition shadow-xs" title="Definir Senha">
+                    🔑 Senha
+                </button>
+                <button onclick="playClickSound(); exportBackup()" class="px-3 py-2 rounded-2xl bg-blue-100 hover:bg-blue-200 text-blue-900 font-bold text-xs transition shadow-xs" title="Backup dos Dados">
+                    💾 Backup
+                </button>
+                <label onclick="playClickSound()" class="px-3 py-2 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs transition shadow-xs cursor-pointer" title="Restaurar Backup">
+                    📂 Restaurar <input type="file" id="import-file" accept=".json" onchange="importBackup(event)" class="hidden">
+                </label>
+                <button onclick="playClickSound(); openTrashModal()" title="Lixeira" class="px-3 py-2 rounded-2xl bg-fofo-pink hover:bg-fofo-pink-dark hover:text-white text-slate-800 font-bold text-xs flex items-center gap-2 transition shadow-xs relative">
+                    <i class="fa-solid fa-trash"></i>
+                    <span id="trash-badge" class="bg-red-400 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 space-y-8 flex-grow w-full">
+
+        <div id="main-tab" class="tab-content space-y-8">
+            <section class="bg-gradient-to-r from-fofo-peach via-fofo-pink/40 to-fofo-purple/40 p-6 rounded-3xl border-4 border-fofo-pink shadow-xs space-y-4">
+                <div class="flex flex-wrap justify-between items-center gap-2 border-b border-fofo-pink-dark/20 pb-3">
+                    <div>
+                        <span class="text-xs font-bold text-amber-900 bg-white/80 px-3 py-1 rounded-full inline-block">✨ Visão Geral do Dia</span>
+                        <h2 class="text-2xl font-bold text-slate-800 mt-1">Minha Rotina Ideal de Hoje</h2>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="playClickSound(); openRoutineModal()" class="px-3 py-2 bg-white/80 hover:bg-white text-amber-900 rounded-2xl font-bold text-xs shadow-xs transition flex items-center gap-1.5 border border-fofo-pink">
+                            <i class="fa-solid fa-pen"></i> Gerenciar Blocos
+                        </button>
+                    </div>
+                </div>
+
+                <div id="ideal-routine-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3"></div>
+            </section>
+
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="tape-effect bg-fofo-peach/60 p-6 rounded-3xl border-2 border-fofo-pink flex flex-col justify-between shadow-xs relative overflow-hidden">
+                    <div class="space-y-2">
+                        <span class="text-xs font-bold text-amber-900/70 bg-white/80 px-3 py-1 rounded-full inline-block">💌 Frase de Hoje</span>
+                        <p id="quote-text" class="font-scrapbook text-3xl text-slate-800 leading-snug pt-2">
+                            "Pequenos passos diários te levam a lugares extraordinários. Respire fundo e faça o seu melhor!"
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center pt-4">
+                        <span class="text-xs text-amber-900 font-semibold">✨ Cantinho do Acolhimento</span>
+                        <button onclick="playClickSound(); newQuote()" class="text-xs font-bold bg-white hover:bg-fofo-pink px-3 py-1.5 rounded-xl border border-fofo-pink transition">Nova Mensagem 🌸</button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-3xl border-2 border-fofo-purple/50 shadow-xs space-y-3">
+                    <div class="flex justify-between items-center px-2">
+                        <h3 class="font-bold text-slate-800 text-base" id="calendar-month-year">Setembro 2026</h3>
+                        <div class="flex gap-1 text-xs">
+                            <button onclick="playClickSound(); changeMonth(-1)" class="w-7 h-7 rounded-xl bg-fofo-lavender hover:bg-fofo-purple flex items-center justify-center transition">❮</button>
+                            <button onclick="playClickSound(); changeMonth(1)" class="w-7 h-7 rounded-xl bg-fofo-lavender hover:bg-fofo-purple flex items-center justify-center transition">❯</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-400 py-1">
+                        <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+                    </div>
+                    <div id="calendar-days" class="grid grid-cols-7 gap-1 text-center text-xs font-semibold"></div>
+                </div>
+            </section>
+
+            <section class="space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">📅 Checklist Interativo da Rotina & Metas</h2>
+                        <p class="text-xs text-slate-400">Atividades e objetivos pré-definidos prontos para uso</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="playClickSound(); redefinirAtividadesPrincipais()" class="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-2xl font-bold text-xs shadow-xs transition">🔄 Redefinir Atividades</button>
+                        <button onclick="playClickSound(); openTaskModal()" class="px-4 py-2 bg-fofo-pink-dark hover:bg-fofo-pink hover:text-slate-800 text-white rounded-2xl font-bold text-xs shadow-xs transition">+ Adicionar Atividade</button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border-2 border-fofo-pink/40 shadow-xs space-y-2">
+                    <div class="flex justify-between items-center text-xs font-bold">
+                        <span>Progresso das Atividades</span>
+                        <span id="routine-progress-percent" class="text-fofo-pink-dark">0%</span>
+                    </div>
+                    <div class="w-full bg-fofo-yellow rounded-full h-3 overflow-hidden border border-fofo-peach">
+                        <div id="routine-progress-bar" class="bg-fofo-pink-dark h-full w-0 transition-all duration-500"></div>
+                    </div>
+                </div>
+
+                <div id="complete-day-container" class="hidden">
+                    <button onclick="playClickSound(); zerarListaChecklist()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-circle-check text-base"></i> 100% Concluído! Zerar lista (enviar notas para lixeira e redefinir) 🌿
+                    </button>
+                </div>
+
+                <div id="routine-list" class="grid grid-cols-1 gap-3"></div>
+            </section>
+
+            <section class="pt-6 border-t-2 border-fofo-pink/30">
+                <div class="scrapbook-frame p-6 rounded-3xl relative space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-dashed border-fofo-pink-dark/30 pb-3">
+                        <div>
+                            <span class="text-xs font-bold text-amber-900 bg-fofo-peach px-3 py-1 rounded-full inline-block font-scrapbook text-lg">✨ Objetivos & Metas</span>
+                            <h2 class="text-2xl font-bold text-slate-800 mt-1">🎯 Meus Sonhos & Desejos</h2>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="playClickSound(); redefinirObjetivosMetas()" class="px-3 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-2xl font-bold text-xs shadow-xs transition">🔄 Redefinir Metas</button>
+                            <button onclick="playClickSound(); addWishlistItem()" class="px-4 py-2 bg-fofo-pink-dark hover:bg-amber-800 text-white rounded-2xl font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Adicionar Desejo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="wishlist-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-2"></div>
+                </div>
+            </section>
+        </div>
+
+        <div id="expenses-tab" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl border-4 border-emerald-300 shadow-xs space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">💸 Gestão Financeira</span>
+                        <h2 class="text-2xl font-bold text-slate-800 mt-1">Painel Completo de Finanças</h2>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="text-xs font-bold text-slate-600">Adicionar/Atualizar Saldo (R$):</label>
+                        <div class="flex items-center gap-1">
+                            <input type="number" step="0.01" id="fin-input-balance" placeholder="Valor" class="p-2 border-2 border-emerald-300 rounded-xl font-bold text-emerald-700 w-32 text-xs focus:outline-none">
+                            <button onclick="playClickSound(); adicionarSaldoFinanceiro()" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs transition shadow-xs">+ Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-200">
+                        <span class="text-xs font-bold text-emerald-800 uppercase">Saldo Inicial / Total</span>
+                        <p id="fin-balance-display" class="text-xl font-bold text-emerald-700 mt-1">R$ 0,00</p>
+                    </div>
+                    <div class="bg-rose-50 p-4 rounded-2xl border border-rose-200">
+                        <span class="text-xs font-bold text-rose-800 uppercase">Dívidas Pendentes</span>
+                        <p id="fin-debts-display" class="text-xl font-bold text-rose-700 mt-1">R$ 0,00</p>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200">
+                        <span class="text-xs font-bold text-amber-800 uppercase">Gastos do Mês</span>
+                        <p id="fin-expenses-display" class="text-xl font-bold text-amber-700 mt-1">R$ 0,00</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200">
+                        <span class="text-xs font-bold text-purple-800 uppercase">Saldo Restante</span>
+                        <p id="fin-remaining-display" class="text-xl font-bold text-purple-700 mt-1">R$ 0,00</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <h3 class="font-bold text-slate-800 text-base border-b pb-2">💳 Cadastrar Dívida / Conta a Pagar</h3>
+                        <form onsubmit="playClickSound(); handleAddDebt(event)" class="space-y-3">
+                            <input type="text" id="debt-title" placeholder="Descrição da Conta" required class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="number" step="0.01" id="debt-amount" placeholder="Valor (R$)" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+                                <input type="text" id="debt-date" placeholder="Vencimento (Ex: 10/09)" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl text-xs transition">+ Adicionar Conta</button>
+                        </form>
+                        <div id="debts-container" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"></div>
+                    </div>
+
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <h3 class="font-bold text-slate-800 text-base border-b pb-2">🛍️ Registrar Gasto Detalhado</h3>
+                        <form onsubmit="playClickSound(); handleAddExpense(event)" class="space-y-3">
+                            <input type="text" id="exp-desc" placeholder="Descrição do Gasto" required class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+                            <div class="grid grid-cols-3 gap-2">
+                                <input type="number" step="0.01" id="exp-amount" placeholder="Valor (R$)" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+                                <select id="exp-cat" class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none bg-white">
+                                    <option value="Alimentação">Alimentação</option>
+                                    <option value="Lazer">Lazer</option>
+                                    <option value="Estudos">Estudos</option>
+                                    <option value="Fixos">Fixos</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                                <select id="exp-method" class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none bg-white">
+                                    <option value="Pix">Pix</option>
+                                    <option value="Cartão">Cartão</option>
+                                    <option value="Débito">Débito</option>
+                                    <option value="Dinheiro">Dinheiro</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition">+ Registrar Gasto</button>
+                        </form>
+                        <div id="expenses-container" class="space-y-2 max-h-[300px] overflow-y-auto pr-1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="studies-tab" class="tab-content hidden space-y-8">
+            <div class="bg-white p-6 rounded-3xl border-4 border-fofo-peach shadow-xs space-y-6">
+                <div class="flex flex-wrap justify-between items-center gap-3 border-b pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-amber-900 font-fredoka">📚 Cantinho do conhecimento e notas</h2>
+                    </div>
+                    <button onclick="playClickSound(); createPredefinedOrCustomStudyNote()" class="px-4 py-2 bg-fofo-pink-dark hover:bg-amber-800 text-white rounded-2xl font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-plus"></i> Adicionar Nota de Estudo
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-amber-50/50 p-4 rounded-2xl border border-amber-200 space-y-3">
+                        <h3 class="font-bold text-amber-900 text-sm flex items-center gap-1.5"><i class="fa-solid fa-lightbulb"></i> O que aprendi</h3>
+                        <div class="space-y-2">
+                            <textarea id="input-learned-text" placeholder="O que você aprendeu..." class="w-full p-2.5 rounded-xl border border-amber-200 text-xs font-semibold focus:outline-none bg-white min-h-[70px]"></textarea>
+                            <button onclick="playClickSound(); salvarAprendizadoCustomizado()" class="w-full py-2 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded-xl text-xs font-bold transition shadow-xs">Salvar aprendizado</button>
+                        </div>
+                        <div id="learned-container" class="space-y-2 max-h-[220px] overflow-y-auto pt-2 border-t border-amber-200/60"></div>
+                    </div>
+
+                    <div class="bg-emerald-50/50 p-4 rounded-2xl border border-emerald-200 space-y-3">
+                        <h3 class="font-bold text-emerald-900 text-sm flex items-center gap-1.5"><i class="fa-solid fa-book-open"></i> Conteúdo para estudar</h3>
+                        <div class="space-y-2">
+                            <textarea id="input-study-content-text" placeholder="Conteúdo para estudar..." class="w-full p-2.5 rounded-xl border border-emerald-200 text-xs font-semibold focus:outline-none bg-white min-h-[70px]"></textarea>
+                            <button onclick="playClickSound(); adicionarConteudoEstudarCustomizado()" class="w-full py-2 bg-emerald-200 hover:bg-emerald-300 text-emerald-900 rounded-xl text-xs font-bold transition shadow-xs">Adicionar</button>
+                        </div>
+                        <div id="study-content-container" class="space-y-2 max-h-[220px] overflow-y-auto pt-2 border-t border-emerald-200/60"></div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-200 space-y-3">
+                    <h3 class="font-bold text-slate-800 text-base">📖 Matérias e Notas Detalhadas</h3>
+                    <div id="predefined-study-notes-container" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA CARDÁPIO (Sem o nome de segunda a domingo) -->
+        <div id="menu-tab" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl border-4 border-fofo-mint shadow-xs space-y-6">
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-800 bg-fofo-mint px-3 py-1 rounded-full">🥦 Cardápio</span>
+                        <h2 class="text-2xl font-bold text-slate-800 mt-1">Planejamento de Refeições</h2>
+                        <p class="text-xs text-slate-400">Edite suas refeições ou clique para atualizar para um cardápio aleatório.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="playClickSound(); atualizarCardapioSemanaAleatorio()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-rotate"></i> Atualizar Cardápio Aleatório
+                        </button>
+                    </div>
+                </div>
+                <div id="menu-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+            </div>
+        </div>
+
+        <div id="movies-tab" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl border-4 border-fofo-purple shadow-xs space-y-6">
+                <div>
+                    <span class="text-xs font-bold text-purple-900 bg-fofo-purple/40 px-3 py-1 rounded-full">🎥 Filmes & Entretenimento</span>
+                    <h2 class="text-2xl font-bold text-slate-800 mt-1">Lista para Assistir</h2>
+                </div>
+                <form onsubmit="playClickSound(); handleAddMovie(event)" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-wrap gap-3 items-center">
+                    <input type="text" id="movie-title" placeholder="Nome do Filme ou Série" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none flex-grow">
+                    <select id="movie-type" class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none bg-white">
+                        <option value="Filme">Filme</option>
+                        <option value="Série">Série</option>
+                        <option value="Anime">Anime</option>
+                    </select>
+                    <button type="submit" class="px-5 py-2.5 bg-fofo-purple text-purple-950 rounded-xl text-xs font-bold hover:bg-purple-300 transition">+ Adicionar</button>
+                </form>
+                <div id="movies-container" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+        </div>
+
+        <div id="birthdays-tab" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl border-4 border-rose-300 shadow-xs space-y-6">
+                <div>
+                    <span class="text-xs font-bold text-rose-800 bg-rose-100 px-3 py-1 rounded-full">Datas Especiais</span>
+                    <h2 class="text-2xl font-bold text-slate-800 mt-1">Aniversários e Celebrações</h2>
+                    <p class="text-xs text-slate-400">Opções pré-definidas incluídas. Você também pode adicionar novas datas!</p>
+                </div>
+
+                <form onsubmit="playClickSound(); handleAddBirthday(event)" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-wrap gap-3 items-center">
+                    <input type="text" id="bday-name" placeholder="Nome do Aniversariante" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none flex-grow">
+                    <input type="text" id="bday-date" placeholder="Data (Ex: 15/10 ou 15/10/1995)" required class="p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none flex-grow">
+                    <button type="submit" class="px-5 py-2.5 bg-rose-500 text-white rounded-xl text-xs font-bold hover:bg-rose-600 transition">+ Adicionar</button>
+                </form>
+
+                <div id="birthdays-container" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            </div>
+        </div>
+
+        <!-- ABA COLAGEM ATUALIZADA -->
+        <div id="colagem-tab" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl border-4 border-amber-300 shadow-xs space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b pb-4">
+                    <div>
+                        <span class="text-xs font-bold text-amber-900 bg-amber-100 px-3 py-1 rounded-full">📜 Aba Colagem / Papiros</span>
+                        <h2 class="text-2xl font-bold text-slate-800 mt-1">Criar & Compartilhar Memórias</h2>
+                        <p class="text-xs text-slate-400">Escolha imagens da galeria do celular, ajuste cores, fontes e fundos variados!</p>
+                    </div>
+                </div>
+
+                <div class="max-w-4xl mx-auto flex flex-col md:flex-row gap-4 items-start">
+                    
+                    <div class="flex flex-col gap-3 w-full md:w-44">
+                        <div class="bg-slate-100 p-3 rounded-2xl border border-slate-200 flex flex-col gap-2">
+                            <span class="text-[11px] font-bold text-slate-700 text-center">🎨 Cor do Texto</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="mudarCorTextoPapiro('#000000')" class="h-9 rounded-xl bg-black border shadow-xs hover:scale-105 transition" title="Preto"></button>
+                                <button onclick="mudarCorTextoPapiro('#ffffff')" class="h-9 rounded-xl bg-white border shadow-xs hover:scale-105 transition" title="Branco"></button>
+                                <button onclick="mudarCorTextoPapiro('#e07a5f')" class="h-9 rounded-xl bg-[#e07a5f] border shadow-xs hover:scale-105 transition" title="Terracota"></button>
+                                <button onclick="mudarCorTextoPapiro('#00ffff')" class="h-9 rounded-xl bg-[#00ffff] border shadow-xs hover:scale-105 transition" title="Ciano Neons"></button>
+                                <button onclick="mudarCorTextoPapiro('#ff00ff')" class="h-9 rounded-xl bg-[#ff00ff] border shadow-xs hover:scale-105 transition" title="Pink Neons"></button>
+                                <button onclick="mudarCorTextoPapiro('#facc15')" class="h-9 rounded-xl bg-[#facc15] border shadow-xs hover:scale-105 transition" title="Amarelo"></button>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-100 p-3 rounded-2xl border border-slate-200 flex flex-col gap-2.5">
+                            <span class="text-[11px] font-bold text-slate-700 text-center">🔍 Barra de Zoom</span>
+                            <div class="flex flex-col gap-1.5">
+                                <span class="text-[10px] text-slate-500 font-semibold text-center">Zoom Nota / Fotos</span>
+                                <div class="flex items-center justify-between bg-white p-1 rounded-xl border border-slate-200">
+                                    <button onclick="ajustarZoomFotoColagem(-1)" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg text-xs font-bold transition">➖</button>
+                                    <span id="label-zoom-foto" class="text-[11px] font-bold text-slate-700">Padrão</span>
+                                    <button onclick="ajustarZoomFotoColagem(1)" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-lg text-xs font-bold transition">➕</button>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-1.5 pt-1">
+                                <span class="text-[10px] text-slate-500 font-semibold text-center">Zoom Texto</span>
+                                <div class="flex items-center justify-between bg-white p-1 rounded-xl border border-slate-200">
+                                    <button onclick="ajustarZoomTextoColagem(-1)" class="px-2 py-1 bg-purple-100 hover:bg-purple-200 text-purple-900 rounded-lg text-xs font-bold transition">➖</button>
+                                    <span id="label-zoom-texto" class="text-[11px] font-bold text-slate-700">Padrão</span>
+                                    <button onclick="ajustarZoomTextoColagem(1)" class="px-2 py-1 bg-purple-100 hover:bg-purple-200 text-purple-900 rounded-lg text-xs font-bold transition">➕</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-100 p-3 rounded-2xl border border-slate-200 flex flex-col gap-2">
+                            <span class="text-[11px] font-bold text-slate-700 text-center">✨ Inspiração</span>
+                            <button onclick="mensagemMotivacionalAleatoriaColagem()" class="py-2.5 bg-rose-200 hover:bg-rose-300 text-rose-900 rounded-xl text-xs font-bold transition shadow-xs text-center">💌 Frases Motivacionais</button>
+                        </div>
+                    </div>
+
+                    <div class="flex-grow w-full">
+                        <div class="cartao-papiro" id="papiro-elemento" style="background-image: url('https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=600&q=80')">
+                            <div class="moldura-costura"></div>
+                            <div class="decor-row">
+                                <span>🌸</span>
+                                <span>✨</span>
+                            </div>
+                            <textarea id="caixa-texto-papiro" placeholder="Escreva seu pensamento, poesia ou recado fofo aqui..." oninput="state.colagemData.text = this.value; saveData()"></textarea>
+                            
+                            <div id="area-fotos-dinamica"></div>
+
+                            <div class="decor-row" style="margin-top: auto;">
+                                <span>🍒</span>
+                                <span>💌</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-3 w-full md:w-52">
+                        <div class="bg-slate-100 p-3 rounded-2xl border border-slate-200 flex flex-col gap-2.5">
+                            <span class="text-[11px] font-bold text-slate-700 text-center">📷 Fotos da Galeria</span>
+                            <button onclick="alterarQuantidadeFotos(1)" class="py-2 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded-xl text-xs font-bold transition">➕ Adicionar Slot Foto</button>
+                            <button onclick="alterarQuantidadeFotos(-1)" class="py-2 bg-stone-200 hover:bg-stone-300 text-stone-800 rounded-xl text-xs font-bold transition">➖ Reduzir Foto</button>
+                        </div>
+
+                        <div class="bg-slate-100 p-3 rounded-2xl border border-slate-200 flex flex-col gap-2">
+                            <span class="text-[11px] font-bold text-slate-700 text-center">🖼️ Fundo do Papiro</span>
+                            <div class="flex items-center justify-between gap-1">
+                                <button class="px-2.5 py-1.5 bg-stone-300 hover:bg-stone-400 rounded-xl text-xs font-bold" onclick="mudarPapelFundo(-1)">❮</button>
+                                <span class="text-[11px] font-bold text-slate-700 truncate text-center" id="label-fundo-nome">Fundo</span>
+                                <button class="px-2.5 py-1.5 bg-stone-300 hover:bg-stone-400 rounded-xl text-xs font-bold" onclick="mudarPapelFundo(1)">❯</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-100 p-3 rounded-2xl border border-slate-200 flex flex-col gap-2">
+                            <span class="text-[11px] font-bold text-slate-700 text-center">✒️ Fonte do Texto</span>
+                            <div class="flex items-center justify-between gap-1">
+                                <button class="px-2.5 py-1.5 bg-stone-300 hover:bg-stone-400 rounded-xl text-xs font-bold" onclick="mudarFonteTexto(-1)">❮</button>
+                                <span class="text-[11px] font-bold text-slate-700 truncate text-center" id="label-fonte-nome">Fonte</span>
+                                <button class="px-2.5 py-1.5 bg-stone-300 hover:bg-stone-400 rounded-xl text-xs font-bold" onclick="mudarFonteTexto(1)">❯</button>
+                            </div>
+                        </div>
+
+                        <button onclick="salvarComoImagem()" class="w-full py-2.5 bg-fofo-pink-dark hover:bg-amber-800 text-white font-bold rounded-2xl text-xs transition shadow-xs">
+                            💾 Baixar Colagem (PNG)
+                        </button>
+                        <button onclick="salvarNotaAtual()" class="w-full py-2.5 bg-fofo-purple text-purple-950 font-bold rounded-2xl text-xs hover:bg-purple-300 transition shadow-xs">
+                            📌 Salvar Nota na Lista
+                        </button>
+                        <button onclick="limparColagem()" class="w-full py-2 bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold rounded-2xl text-xs transition">
+                            🗑️ Limpar Colagem
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="pt-6 border-t border-slate-200 space-y-4">
+                    <h3 class="font-bold text-slate-800 text-base">📌 Minhas Colagens & Papiros Salvos</h3>
+                    <div id="saved-notes-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="max-w-6xl mx-auto px-4 py-6 w-full text-center text-xs text-slate-500 border-t border-fofo-pink/40 mt-12">
+        créditos Lalaloopsy 🐱🍒
+    </footer>
+
+    <div id="routine-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border-4 border-fofo-pink p-6 w-full max-w-xl space-y-4 shadow-xl max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b pb-2">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-clock"></i> Gerenciar Blocos da Rotina Ideal</h3>
+                <button onclick="playClickSound(); closeRoutineModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="flex justify-between items-center">
+                <button onclick="playClickSound(); addIdealRoutineItem()" class="px-3 py-2 bg-fofo-pink-dark text-white rounded-xl text-xs font-bold">+ Adicionar Bloco</button>
+            </div>
+            <div id="routine-editor-container" class="space-y-2 overflow-y-auto flex-grow pr-1"></div>
+        </div>
+    </div>
+
+    <div id="task-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border-4 border-fofo-pink p-6 w-full max-w-md space-y-4 shadow-xl">
+            <div class="flex items-center justify-between border-b pb-2">
+                <h3 class="text-lg font-bold text-slate-800">Nova Atividade na Rotina</h3>
+                <button onclick="playClickSound(); closeTaskModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form onsubmit="playClickSound(); handleSaveTask(event)" class="space-y-3">
+                <input type="text" id="task-title" placeholder="Título da Atividade" required class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+                <input type="text" id="task-time" placeholder="Horário (Ex: 08:00)" required class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+                <button type="submit" class="w-full py-2.5 bg-fofo-pink-dark text-white rounded-xl text-xs font-bold hover:bg-amber-800 transition">Salvar Atividade</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="trash-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border-4 border-fofo-pink p-6 w-full max-w-xl space-y-4 shadow-xl max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b pb-2">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-trash"></i> Lixeira do Cantinho</h3>
+                <button onclick="playClickSound(); closeTrashModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="flex justify-between items-center gap-2">
+                <span class="text-xs text-slate-500">Itens excluídos ficam aqui. Você pode restaurar ou apagar definitivamente.</span>
+                <button onclick="playShortClickSound(); esvaziarLixeiraTotalmente()" class="px-3 py-1.5 bg-rose-500 text-white rounded-xl text-xs font-bold hover:bg-rose-600 transition whitespace-nowrap">🗑️ Excluir Permanentemente Todos</button>
+            </div>
+            <div id="trash-items-container" class="space-y-2 overflow-y-auto flex-grow pr-1"></div>
+        </div>
+    </div>
+
+    <div id="password-setting-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border-4 border-fofo-pink p-6 w-full max-w-sm space-y-4 shadow-xl">
+            <div class="flex items-center justify-between border-b pb-2">
+                <h3 class="text-base font-bold text-slate-800">Definir Senha de Acesso</h3>
+                <button onclick="playClickSound(); closePasswordSettingModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="space-y-3">
+                <input type="password" id="new-password-input" placeholder="Digite uma senha numérica ou texto" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:outline-none">
+                <button onclick="salvarSenhaNova()" class="w-full py-2.5 bg-fofo-pink-dark text-white rounded-xl text-xs font-bold hover:bg-amber-800 transition">Salvar Senha</button>
+                <button onclick="removerSenha()" class="w-full py-2 bg-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-300 transition">Remover Senha</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="password-lock-modal" class="fixed inset-0 bg-slate-950 z-[99999] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border-4 border-fofo-pink p-8 w-full max-w-sm space-y-4 text-center shadow-2xl">
+            <div class="w-16 h-16 bg-fofo-pink rounded-full flex items-center justify-center text-3xl mx-auto shadow-sm">🔒</div>
+            <h3 class="text-xl font-bold text-slate-800">Cantinho Protegido por Senha</h3>
+            <p class="text-xs text-slate-500">Digite sua senha para acessar sua agenda carinhosa.</p>
+            <input type="password" id="unlock-password-input" placeholder="Sua senha" class="w-full p-3 rounded-xl border-2 border-fofo-pink text-sm text-center font-semibold focus:outline-none">
+            <button onclick="tentarDesbloquear()" class="w-full py-3 bg-fofo-pink-dark text-white rounded-xl text-xs font-bold hover:bg-amber-800 transition shadow-md">Desbloquear 🌸</button>
+        </div>
+    </div>
+
+    <audio id="click-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
+    <audio id="trash-sound" src="https://assets.mixkit.co/active_storage/sfx/2702/2702-preview.mp3" preload="auto"></audio>
+    <audio id="short-pop-sound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
+
+    <script>
+        const themes = ['theme-t1', 'theme-t4']; 
+        let currentThemeIndex = 0;
+
+        function cycleThemeMode() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            const newTheme = themes[currentThemeIndex];
+            applyTheme(newTheme);
+            state.currentTheme = newTheme;
+            saveData();
+        }
+
+        function applyTheme(themeName) {
+            themes.forEach(t => document.body.classList.remove(t));
+            document.body.classList.add(themeName);
+            currentThemeIndex = themes.indexOf(themeName);
+            if (currentThemeIndex === -1) currentThemeIndex = 0;
+            const btn = document.getElementById('btn-theme-selector');
+            if(btn) {
+                if(themeName === 'theme-t4') btn.innerHTML = '🌙';
+                else btn.innerHTML = '☀️';
+            }
+        }
+
+        const quotes = [
+            "Pequenos passos diários te levam a lugares extraordinários. Respire fundo e faça o seu melhor!",
+            "Você é mais forte do que pensa e capaz de alcançar tudo o que sonha! 🌸",
+            "Acredite no processo e seja gentil com você mesma todos os dias.",
+            "Um dia de cada vez. O seu melhor já é suficiente! ✨",
+            "Floresça onde quer que esteja plantada. 🌷",
+            "A persistência é o caminho para o êxito. Continue brilhando!"
+        ];
+
+        function newQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            document.getElementById('quote-text').innerText = `"${quotes[randomIndex]}"`;
+        }
+
+        function playClickSound() {
+            const sound = document.getElementById('click-sound');
+            if (sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
+        }
+        function playTrashSound() {
+            const sound = document.getElementById('trash-sound');
+            if (sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
+        }
+        function playShortClickSound() {
+            const sound = document.getElementById('short-pop-sound');
+            if (sound) { sound.currentTime = 0; sound.play().catch(e => {}); }
+        }
+
+        let state = {
+            currentTheme: 'theme-t1',
+            password: '',
+            idealRoutine: [
+                { id: 1, time: '08:00', title: 'Café & Despertar', subtitle: 'Calma e gratidão', badgeColor: 'bg-fofo-yellow', textColor: 'text-amber-900' },
+                { id: 2, time: '09:30', title: 'Foco nos Estudos', subtitle: 'Leitura e prática', badgeColor: 'bg-fofo-peach', textColor: 'text-amber-900' },
+                { id: 3, time: '13:00', title: 'Almoço Saudável', subtitle: 'Energia e descanso', badgeColor: 'bg-fofo-mint', textColor: 'text-emerald-900' },
+                { id: 4, time: '15:00', title: 'Produtividade & Metas', subtitle: 'Projetos e tarefas', badgeColor: 'bg-fofo-lavender', textColor: 'text-purple-900' },
+                { id: 5, time: '20:00', title: 'Momento de Cuidado', subtitle: 'Paz e relaxamento', badgeColor: 'bg-fofo-pink', textColor: 'text-rose-900' }
+            ],
+            tasks: [
+                { id: 101, title: 'Revisar anotações e resumos da semana', time: '09:00', completed: false },
+                { id: 102, title: 'Praticar exercícios físicos ou caminhada leve', time: '17:00', completed: false },
+                { id: 103, title: 'Organizar ambiente de estudo e planejar amanhã', time: '21:00', completed: false }
+            ],
+            wishlist: [
+                { id: 201, title: 'Concluir curso de especialização com nota máxima', price: 'Meta Principal ✨', done: false },
+                { id: 202, title: 'Comprar um planner impresso fofinho', price: 'R$ 65,00', done: false },
+                { id: 203, title: 'Ler 3 livros novos este mês', price: 'Meta de Leitura 📚', done: false }
+            ],
+            learned: [
+                { id: 301, text: 'Conceitos avançados de organização de tempo' },
+                { id: 302, text: 'Importância da constância sobre a perfeição' }
+            ],
+            studyContent: [
+                { id: 401, text: 'Capítulo 4 de História da Arte e Vintage' },
+                { id: 402, text: 'Revisão de vocabulário e gramática' }
+            ],
+            financeBalance: 0,
+            debts: [],
+            expenses: [],
+            studyNotes: [
+                { id: 501, title: 'Resumo de Foco & Produtividade', category: 'Dicas', text: 'Divida grandes tarefas em blocos menores de 25 minutos.' },
+                { id: 502, title: 'Metodologia de Aprendizado', category: 'Método', text: 'Ensine o que aprendeu para fixar melhor o conteúdo na mente.' }
+            ],
+            menu: [
+                { day: 'Segunda-feira', breakfast: 'Pão integral com ovos mexidos e café', lunch: 'Frango grelhado com arroz integral e legumes', dinner: 'Sopa leve de legumes com frango desfiado' },
+                { day: 'Terça-feira', breakfast: 'Panqueca de aveia com frutas', lunch: 'Carne moída com purê de mandioquinha e salada', dinner: 'Omelete de forno com queijo e tomate' },
+                { day: 'Quarta-feira', breakfast: 'Tapioca com queijo branco', lunch: 'Peixe assado com batatas rústicas e brócolis', dinner: 'Crepioca recheada com frango' },
+                { day: 'Quinta-feira', breakfast: 'Iogurte natural com granola e mel', lunch: 'Strogonoff leve de frango com arroz', dinner: 'Salada completa com grão-de-bico e atum' },
+                { day: 'Sexta-feira', breakfast: 'Vitamina nutritiva de banana e aveia', lunch: 'Hambúrguer artesanal assado com batata doce', dinner: 'Pizza integral de frigideira com tomate e queijo' },
+                { day: 'Sábado', breakfast: 'Pão de queijo caseiro com café', lunch: 'Escondidinho de carne-seca com abóbora', dinner: 'Lanche natural caprichado' },
+                { day: 'Domingo', breakfast: 'Bolo caseiro fofinho com chá', lunch: 'Almoço especial de família (prato livre)', dinner: 'Sopa cremosa ou sanduíche leve' }
+            ],
+            movies: [
+                { id: 601, title: 'O Fabuloso Destino de Amélie Poulain', type: 'Filme', watched: false },
+                { id: 602, title: 'Anne with an E', type: 'Série', watched: true }
+            ],
+            birthdays: [
+                { id: 701, name: 'Mamãe Coração 🌸', date: '12/04' },
+                { id: 702, name: 'Melhor Amiga ✨', date: '25/08' }
+            ],
+            trash: [],
+            savedNotes: [],
+            colagemData: {
+                text: 'Guarde aqui suas memórias mais doces e fofas! 🌸✨',
+                fontIndex: 0,
+                fundoIndex: 0,
+                textColor: '#000000',
+                alinhamento: 'center',
+                quantidadeFotos: 3,
+                zoomFotoLevel: 1,
+                zoomTextoLevel: 1,
+                img1: '',
+                img2: '',
+                img3: ''
+            }
+        };
+
+        function redefinirAtividadesPrincipais() {
+            playShortClickSound();
+            state.tasks = [
+                { id: Date.now() + 1, title: 'Revisar anotações e resumos da semana', time: '09:00', completed: false },
+                { id: Date.now() + 2, title: 'Praticar exercícios físicos ou caminhada leve', time: '17:00', completed: false },
+                { id: Date.now() + 3, title: 'Organizar ambiente de estudo e planejar amanhã', time: '21:00', completed: false }
+            ];
+            saveData();
+            renderTasks();
+        }
+
+        function redefinirObjetivosMetas() {
+            playShortClickSound();
+            state.wishlist = [
+                { id: Date.now() + 1, title: 'Concluir curso de especialização com nota máxima', price: 'Meta Principal ✨', done: false },
+                { id: Date.now() + 2, title: 'Comprar um planner impresso fofinho', price: 'R$ 65,00', done: false },
+                { id: Date.now() + 3, title: 'Ler 3 livros novos este mês', price: 'Meta de Leitura 📚', done: false }
+            ];
+            saveData();
+            renderWishlist();
+        }
+
+        function saveData() {
+            localStorage.setItem('agenda_vintage_fofa_state', JSON.stringify(state));
+            updateTrashBadge();
+        }
+
+        function loadData() {
+            const data = localStorage.getItem('agenda_vintage_fofa_state');
+            if (data) {
+                try {
+                    const parsed = JSON.parse(data);
+                    state = { ...state, ...parsed };
+                } catch(e) {}
+            }
+            updateTrashBadge();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(tabId);
+            if (target) target.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function initHeaderDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const todayStr = new Date().toLocaleDateString('pt-BR', options);
+            const el = document.getElementById('header-date');
+            if (el) el.innerText = todayStr.charAt(0).toUpperCase() + todayStr.slice(1);
+        }
+
+        let currentCalendarDate = new Date();
+        function renderCalendar() {
+            const container = document.getElementById('calendar-days');
+            const monthYearEl = document.getElementById('calendar-month-year');
+            if (!container || !monthYearEl) return;
+            container.innerHTML = '';
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            monthYearEl.innerText = `${monthNames[month]} ${year}`;
+            for (let i = 0; i < firstDayIndex; i++) {
+                container.innerHTML += `<div></div>`;
+            }
+            const today = new Date();
+            for (let day = 1; day <= totalDays; day++) {
+                const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+                container.innerHTML += `<div class="p-1 rounded-xl font-bold text-xs ${isToday ? 'bg-fofo-pink-dark text-white' : 'hover:bg-fofo-lavender text-slate-700'}">${day}</div>`;
+            }
+        }
+        function changeMonth(dir) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + dir);
+            renderCalendar();
+        }
+
+        function renderIdealRoutine() {
+            const container = document.getElementById('ideal-routine-container');
+            if(!container) return;
+            container.innerHTML = '';
+            state.idealRoutine.forEach(item => {
+                container.innerHTML += `
+                    <div class="bg-white/85 p-3 rounded-2xl border border-fofo-pink flex flex-col justify-between text-center space-y-1 shadow-xs">
+                        <span class="text-[10px] font-bold ${item.textColor || 'text-amber-900'} ${item.badgeColor || 'bg-fofo-yellow'} px-2 py-0.5 rounded-full inline-block mx-auto">${item.time}</span>
+                        <p class="text-xs font-bold text-slate-800">${item.title}</p>
+                        <span class="text-[10px] text-slate-500">${item.subtitle || ''}</span>
+                    </div>
+                `;
+            });
+            renderRoutineEditorList();
+        }
+        function renderRoutineEditorList() {
+            const container = document.getElementById('routine-editor-container');
+            if (!container) return;
+            container.innerHTML = '';
+            state.idealRoutine.forEach(item => {
+                container.innerHTML += `
+                    <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                        <div>
+                            <span class="font-bold text-fofo-pink-dark">${item.time}</span> - <span class="font-semibold text-slate-800">${item.title}</span>
+                        </div>
+                        <button onclick="playTrashSound(); excluirBlocoRotina(${item.id})" class="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg font-bold hover:bg-rose-200"><i class="fa-solid fa-trash"></i> Excluir</button>
+                    </div>
+                `;
+            });
+        }
+        function openRoutineModal() { document.getElementById('routine-modal').classList.remove('hidden'); renderRoutineEditorList(); }
+        function closeRoutineModal() { document.getElementById('routine-modal').classList.add('hidden'); renderIdealRoutine(); }
+        function addIdealRoutineItem() {
+            const time = prompt("Digite o horário (Ex: 14:00):", "14:00");
+            if (!time) return;
+            const title = prompt("Digite o título da atividade:", "Estudo focado");
+            if (!title) return;
+            state.idealRoutine.push({ id: Date.now(), time, title, subtitle: 'Novo bloco', badgeColor: 'bg-fofo-yellow', textColor: 'text-amber-900' });
+            saveData();
+            renderIdealRoutine();
+        }
+        function excluirBlocoRotina(id) {
+            state.trash.push({ ...state.idealRoutine.find(x => x.id === id), type: 'Bloco de Rotina', deletedAt: new Date().toLocaleDateString() });
+            state.idealRoutine = state.idealRoutine.filter(x => x.id !== id);
+            saveData();
+            renderIdealRoutine();
+        }
+
+        function renderTasks() {
+            const container = document.getElementById('routine-list');
+            if (!container) return;
+            container.innerHTML = '';
+            if (state.tasks.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Nenhuma atividade cadastrada. Aproveite para adicionar!</p>`;
+                updateProgressBar();
+                return;
+            }
+            state.tasks.forEach(t => {
+                container.innerHTML += `
+                    <div class="p-3.5 bg-white rounded-2xl border-2 border-fofo-pink/40 shadow-xs flex items-center justify-between gap-3 text-xs">
+                        <div class="flex items-center gap-3 cursor-pointer flex-grow" onclick="toggleTask(${t.id})">
+                            <input type="checkbox" ${t.completed ? 'checked' : ''} class="w-4 h-4 accent-fofo-pink-dark cursor-pointer">
+                            <div>
+                                <p class="font-bold text-slate-800 ${t.completed ? 'line-through text-slate-400' : ''}">${t.title}</p>
+                                <span class="text-[10px] text-fofo-pink-dark font-bold">${t.time}</span>
+                            </div>
+                        </div>
+                        <button onclick="playTrashSound(); excluirTarefa(${t.id})" class="text-slate-400 hover:text-rose-600 transition p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            updateProgressBar();
+        }
+        function updateProgressBar() {
+            if (state.tasks.length === 0) {
+                document.getElementById('routine-progress-bar').style.width = '0%';
+                document.getElementById('routine-progress-percent').innerText = '0%';
+                document.getElementById('complete-day-container').classList.add('hidden');
+                return;
+            }
+            const completedCount = state.tasks.filter(t => t.completed).length;
+            let percent = Math.round((completedCount / state.tasks.length) * 100);
+            const progressBar = document.getElementById('routine-progress-bar');
+            progressBar.style.width = `${percent}%`;
+            document.getElementById('routine-progress-percent').innerText = `${percent}%`;
+            if (percent === 100) {
+                progressBar.style.backgroundColor = '#10b981';
+                document.getElementById('complete-day-container').classList.remove('hidden');
+            } else {
+                progressBar.style.backgroundColor = '#e07a5f';
+                document.getElementById('complete-day-container').classList.add('hidden');
+            }
+        }
+        function toggleTask(id) {
+            playShortClickSound();
+            state.tasks = state.tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            saveData();
+            renderTasks();
+        }
+        function excluirTarefa(id) {
+            const task = state.tasks.find(t => t.id === id);
+            if (task) {
+                state.trash.push({ ...task, type: 'Atividade', deletedAt: new Date().toLocaleDateString() });
+                state.tasks = state.tasks.filter(t => t.id !== id);
+                saveData();
+                renderTasks();
+                renderTrash();
+            }
+        }
+        function zerarListaChecklist() {
+            playShortClickSound();
+            state.tasks.forEach(t => {
+                state.trash.push({ ...t, type: 'Atividade Concluída', deletedAt: new Date().toLocaleDateString() });
+            });
+            state.tasks = [];
+            saveData();
+            renderTasks();
+            renderTrash();
+        }
+        function openTaskModal() { document.getElementById('task-modal').classList.remove('hidden'); }
+        function closeTaskModal() { document.getElementById('task-modal').classList.add('hidden'); }
+        function handleSaveTask(e) {
+            e.preventDefault();
+            const title = document.getElementById('task-title').value;
+            const time = document.getElementById('task-time').value;
+            state.tasks.push({ id: Date.now(), title, time, completed: false });
+            saveData();
+            renderTasks();
+            closeTaskModal();
+            document.getElementById('task-title').value = '';
+            document.getElementById('task-time').value = '';
+        }
+
+        function renderWishlist() {
+            const container = document.getElementById('wishlist-container');
+            if (!container) return;
+            container.innerHTML = '';
+            state.wishlist.forEach(item => {
+                container.innerHTML += `
+                    <div class="p-3.5 bg-white/90 rounded-2xl border border-fofo-pink shadow-xs flex justify-between items-center text-xs gap-2">
+                        <div class="flex items-center gap-2.5 cursor-pointer flex-grow" onclick="toggleWishlistItem(${item.id})">
+                            <input type="checkbox" ${item.done ? 'checked' : ''} class="w-4 h-4 accent-fofo-pink-dark cursor-pointer">
+                            <div>
+                                <p class="font-bold text-slate-800 ${item.done ? 'line-through text-slate-400 italic' : ''}">${item.title}</p>
+                                <span class="text-[10px] text-fofo-pink-dark font-bold">${item.price}</span>
+                            </div>
+                        </div>
+                        <button onclick="playTrashSound(); excluirMeta(${item.id})" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+        function toggleWishlistItem(id) {
+            playShortClickSound();
+            state.wishlist = state.wishlist.map(w => w.id === id ? { ...w, done: !w.done } : w);
+            saveData();
+            renderWishlist();
+        }
+        function addWishlistItem() {
+            const title = prompt("Digite o objetivo ou desejo fofo:", "Comprar material de papelaria");
+            if (!title) return;
+            const price = prompt("Valor estimativo ou descrição (Opcional):", "R$ 0,00");
+            state.wishlist.push({ id: Date.now(), title, price: price || 'R$ 0,00', done: false });
+            saveData();
+            renderWishlist();
+        }
+        function excluirMeta(id) {
+            const item = state.wishlist.find(x => x.id === id);
+            if(item) {
+                state.trash.push({ ...item, type: 'Objetivo / Meta', deletedAt: new Date().toLocaleDateString() });
+                state.wishlist = state.wishlist.filter(x => x.id !== id);
+                saveData();
+                renderWishlist();
+                renderTrash();
+            }
+        }
+
+        function renderStudies() {
+            renderLearned();
+            renderStudyContent();
+            renderPredefinedStudyNotes();
+        }
+        function renderLearned() {
+            const container = document.getElementById('learned-container');
+            if (!container) return;
+            container.innerHTML = '';
+            if(state.learned.length === 0) {
+                container.innerHTML = `<p class="text-[11px] text-slate-400">Nenhum aprendizado registrado ainda.</p>`;
+                return;
+            }
+            state.learned.forEach(item => {
+                container.innerHTML += `
+                    <div class="p-2.5 bg-white rounded-xl border border-amber-200 flex justify-between items-center text-xs shadow-xs">
+                        <span class="font-semibold text-slate-800">${item.text}</span>
+                        <button onclick="playTrashSound(); excluirAprendido(${item.id})" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+        function salvarAprendizadoCustomizado() {
+            const inputEl = document.getElementById('input-learned-text');
+            const text = inputEl ? inputEl.value.trim() : '';
+            if(!text) return;
+            state.learned.push({ id: Date.now(), text });
+            inputEl.value = '';
+            saveData();
+            renderLearned();
+        }
+        function excluirAprendido(id) {
+            const item = state.learned.find(x => x.id === id);
+            if(item) {
+                state.trash.push({ ...item, type: 'O que eu aprendi', deletedAt: new Date().toLocaleDateString() });
+                state.learned = state.learned.filter(x => x.id !== id);
+                saveData();
+                renderLearned();
+                renderTrash();
+            }
+        }
+
+        function renderStudyContent() {
+            const container = document.getElementById('study-content-container');
+            if (!container) return;
+            container.innerHTML = '';
+            if(state.studyContent.length === 0) {
+                container.innerHTML = `<p class="text-[11px] text-slate-400">Nenhum conteúdo para estudar cadastrado.</p>`;
+                return;
+            }
+            state.studyContent.forEach(item => {
+                container.innerHTML += `
+                    <div class="p-2.5 bg-white rounded-xl border border-emerald-200 flex justify-between items-center text-xs shadow-xs">
+                        <span class="font-semibold text-slate-800">${item.text}</span>
+                        <button onclick="playTrashSound(); excluirEstudoConteudo(${item.id})" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+        function adicionarConteudoEstudarCustomizado() {
+            const inputEl = document.getElementById('input-study-content-text');
+            const text = inputEl ? inputEl.value.trim() : '';
+            if(!text) return;
+            state.studyContent.push({ id: Date.now(), text });
+            inputEl.value = '';
+            saveData();
+            renderStudyContent();
+        }
+        function excluirEstudoConteudo(id) {
+            const item = state.studyContent.find(x => x.id === id);
+            if(item) {
+                state.trash.push({ ...item, type: 'Conteúdo para estudar', deletedAt: new Date().toLocaleDateString() });
+                state.studyContent = state.studyContent.filter(x => x.id !== id);
+                saveData();
+                renderStudyContent();
+                renderTrash();
+            }
+        }
+
+        function renderPredefinedStudyNotes() {
+            const container = document.getElementById('predefined-study-notes-container');
+            if (!container) return;
+            container.innerHTML = '';
+            state.studyNotes.forEach(n => {
+                container.innerHTML += `
+                    <div class="p-4 bg-fofo-peach/40 rounded-2xl border border-fofo-peach shadow-xs space-y-2 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold bg-white px-2 py-0.5 rounded-full text-amber-900">${n.category}</span>
+                            <h4 class="font-bold text-slate-800 text-sm mt-1">${n.title}</h4>
+                            <p class="text-xs text-slate-600 mt-1">${n.text}</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2">
+                            <button onclick="editarNotaEstudo(${n.id})" class="text-xs text-amber-900 bg-white px-2 py-1 rounded-lg font-bold hover:bg-amber-100">Editar</button>
+                            <button onclick="playTrashSound(); excluirNotaEstudo(${n.id})" class="text-xs text-slate-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i> Excluir</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        function createPredefinedOrCustomStudyNote() {
+            const title = prompt("Título da nota de estudo / matéria:", "Resumo Importante");
+            if(!title) return;
+            const category = prompt("Categoria:", "Geral");
+            const text = prompt("Conteúdo detalhado:", "Detalhes do assunto...");
+            state.studyNotes.push({ id: Date.now(), title, category: category || 'Geral', text: text || '' });
+            saveData();
+            renderPredefinedStudyNotes();
+        }
+        function editarNotaEstudo(id) {
+            const nota = state.studyNotes.find(x => x.id === id);
+            if(!nota) return;
+            const novoTitulo = prompt("Editar Título:", nota.title);
+            if(novoTitulo === null) return;
+            const novoTexto = prompt("Editar Conteúdo Detalhado:", nota.text);
+            if(novoTexto === null) return;
+            nota.title = novoTitulo;
+            nota.text = novoTexto;
+            saveData();
+            renderPredefinedStudyNotes();
+        }
+        function excluirNotaEstudo(id) {
+            const item = state.studyNotes.find(x => x.id === id);
+            if(item) {
+                state.trash.push({ ...item, type: 'Nota de Estudo', deletedAt: new Date().toLocaleDateString() });
+                state.studyNotes = state.studyNotes.filter(x => x.id !== id);
+                saveData();
+                renderPredefinedStudyNotes();
+                renderTrash();
+            }
+        }
+
+        function renderFinances() {
+            const balEl = document.getElementById('fin-balance-display');
+            const debtsEl = document.getElementById('fin-debts-display');
+            const expEl = document.getElementById('fin-expenses-display');
+            const remEl = document.getElementById('fin-remaining-display');
+            if(!balEl) return;
+
+            const totalDebts = state.debts.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
+            const totalExpenses = state.expenses.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
+            const remaining = state.financeBalance - totalDebts - totalExpenses;
+
+            balEl.innerText = `R$ ${state.financeBalance.toFixed(2)}`;
+            debtsEl.innerText = `R$ ${totalDebts.toFixed(2)}`;
+            expEl.innerText = `R$ ${totalExpenses.toFixed(2)}`;
+            remEl.innerText = `R$ ${remaining.toFixed(2)}`;
+
+            renderDebts();
+            renderExpenses();
+        }
+        function adicionarSaldoFinanceiro() {
+            const val = parseFloat(document.getElementById('fin-input-balance').value);
+            if (isNaN(val)) return;
+            state.financeBalance = val;
+            saveData();
+            renderFinances();
+            document.getElementById('fin-input-balance').value = '';
+        }
+        function handleAddDebt(e) {
+            e.preventDefault();
+            const title = document.getElementById('debt-title').value;
+            const amount = parseFloat(document.getElementById('debt-amount').value);
+            const date = document.getElementById('debt-date').value;
+            state.debts.push({ id: Date.now(), title, amount, date });
+            saveData();
+            renderFinances();
+            document.getElementById('debt-title').value = '';
+            document.getElementById('debt-amount').value = '';
+            document.getElementById('debt-date').value = '';
+        }
+        function renderDebts() {
+            const container = document.getElementById('debts-container');
+            if(!container) return;
+            container.innerHTML = '';
+            state.debts.forEach(d => {
+                container.innerHTML += `
+                    <div class="p-2.5 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-xs">
+                        <div>
+                            <span class="font-bold text-slate-800">${d.title}</span> - <span class="text-rose-600 font-bold">R$ ${d.amount.toFixed(2)}</span>
+                            <span class="text-[10px] text-slate-400 block">Vencimento: ${d.date}</span>
+                        </div>
+                        <button onclick="playTrashSound(); excluirDivida(${d.id})" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+        function excluirDivida(id) {
+            const item = state.debts.find(x => x.id === id);
+            if(item) {
+                state.trash.push({ ...item, type: 'Dívida / Conta', deletedAt: new Date().toLocaleDateString() });
+                state.debts = state.debts.filter(x => x.id !== id);
+                saveData();
+                renderFinances();
+                renderTrash();
+            }
+        }
+        function handleAddExpense(e) {
+            e.preventDefault();
+            const description = document.getElementById('exp-desc').value;
+            const amount = parseFloat(document.getElementById('exp-amount').value);
+            const category = document.getElementById('exp-cat').value;
+            const method = document.getElementById('exp-method').value;
+            state.expenses.push({ id: Date.now(), description, amount, category, method });
+            saveData();
+            renderFinances();
+            document.getElementById('exp-desc').value = '';
+            document.getElementById('exp-amount').value = '';
+        }
+        function renderExpenses() {
+            const container = document.getElementById('expenses-container');
+            if(!container) return;
+            container.innerHTML = '';
+            state.expenses.forEach(ex => {
+                container.innerHTML += `
+                    <div class="p-2.5 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-xs">
+                        <div>
+                            <span class="font-bold text-slate-800">${ex.description}</span> - <span class="text-amber-700 font-bold">R$ ${ex.amount.toFixed(2)}</span>
+                            <span class="text-[10px] text-slate-400 block">${ex.category} • ${ex.method}</span>
+                        </div>
+                        <button onclick="playTrashSound(); excluirGasto(${ex.id})" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+        function excluirGasto(id) {
+            const item = state.expenses.find(x => x.id === id);
+            if(item) {
+                state.trash.push({ ...item, type: 'Gasto Detalhado', deletedAt: new Date().toLocaleDateString() });
+                state.expenses = state.expenses.filter(x => x.id !== id);
+                saveData();
+                renderFinances();
+                renderTrash();
+            }
+        }
+
+        /* Funções de Cardápio (Sem o nome de segunda a domingo) */
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            if(!container) return;
+            container.innerHTML = '';
+            state.menu.forEach((m, index) => {
+                container.innerHTML += `
+                    <div class="p-4 bg-fofo-mint/40 rounded-2xl border border-fofo-mint shadow-xs space-y-3 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center border-b border-emerald-200 pb-2">
+                                <span class="text-xs font-bold text-emerald-900 bg-white px-2.5 py-1 rounded-full">${m.day}</span>
+                                <button onclick="editarCardapioItem(${index})" class="text-[10px] bg-white hover:bg-emerald-100 text-emerald-900 font-bold px-2 py-1 rounded-lg transition">✏️ Editar Refeições</button>
+                            </div>
+                            <div class="space-y-1.5 pt-2 text-xs">
+                                <div class="bg-white/80 p-2 rounded-xl border border-emerald-100">
+                                    <strong class="text-emerald-800 block text-[11px]">🍳 Café da Manhã:</strong>
+                                    <span class="text-slate-700">${m.breakfast || 'Não definido'}</span>
+                                </div>
+                                <div class="bg-white/80 p-2 rounded-xl border border-emerald-100">
+                                    <strong class="text-emerald-800 block text-[11px]">🥗 Almoço:</strong>
+                                    <span class="text-slate-700">${m.lunch || 'Não definido'}</span>
+                                </div>
+                                <div class="bg-white/80 p-2 rounded-xl border border-emerald-100">
+                                    <strong class="text-emerald-800 block text-[11px]">🍲 Jantar:</strong>
+                                    <span class="text-slate-700">${m.dinner || 'Não definido'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        function editarCardapioItem(index) {
+            playClickSound();
+            const item = state.menu[index];
+            const novoCafe = prompt(`Café da manhã de ${item.day}:`, item.breakfast || '');
+            if(novoCafe === null) return;
+            const novoAlmoco = prompt(`Almoço de ${item.day}:`, item.lunch || '');
+            if(novoAlmoco === null) return;
+            const novoJantar = prompt(`Jantar de ${item.day}:`, item.dinner || '');
+            if(novoJantar === null) return;
+
+            state.menu[index].breakfast = novoCafe;
+            state.menu[index].lunch = novoAlmoco;
+            state.menu[index].dinner = novoJantar;
+            saveData();
+            renderMenu();
+        }
+        function atualizarCardapioSemanaAleatorio() {
+            playShortClickSound();
+            const opCafe = [
+                "Pão integral com ovos mexidos e café", "Panqueca de aveia com frutas", "Tapioca com queijo branco", 
+                "Iogurte natural com granola", "Vitamina nutritiva de banana", "Pão de queijo caseiro", "Bolo fofinho com chá"
+            ];
+            const opAlmoco = [
+                "Frango grelhado com arroz integral e legumes", "Carne moída com purê de mandioquinha", 
+                "Peixe assado com batatas rústicas", "Strogonoff leve de frango com arroz", "Hambúrguer artesanal assado",
+                "Escondidinho de frango", "Almoço especial de família (prato livre)"
+            ];
+            const opJantar = [
+                "Sopa leve de legumes com frango", "Omelete de forno com queijo", "Crepioca recheada com frango",
+                "Salada completa com atum", "Pizza integral de frigideira", "Lanche natural caprichado", "Sopa cremosa"
+            ];
+
+            state.menu = state.menu.map((m) => ({
+                day: m.day,
+                breakfast: opCafe[Math.floor(Math.random() * opCafe.length)],
+                lunch: opAlmoco[Math.floor(Math.random() * opAlmoco.length)],
+                dinner: opJantar[Math.floor(Math.random() * opJantar.length)]
+            }));
+            saveData();
+            renderMenu();
+        }
+
+        function renderMovies() {
+            const container = document.getElementById('movies-container');
+            if(!container) return;
+            container.innerHTML = '';
+            state.movies.forEach(mv => {
+                container.innerHTML += `
+                    <div class="p-3 bg-fofo-purple/20 rounded-2xl border border-fofo-purple flex justify-between items-center text-xs">
+                        <div>
+                            <p class="font-bold text-slate-800 ${mv.watched ? 'line-through text-slate-400' : ''}">${mv.title}</p>
+                            <span class="text-[10px] text-purple-900 font-bold">${mv.type}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleMovie(${mv.id})" class="px-2 py-1 bg-white rounded-lg font-bold text-[10px] shadow-xs">${mv.watched ? 'Assistido' : 'Pendente'}</button>
+                            <button onclick="playTrashSound(); excluirFilme(${mv.id})" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        function handleAddMovie(e) {
+            e.preventDefault();
+            const title = document.getElementById('movie-title').value;
+            const type = document.getElementById('movie-type').value;
+            state.movies.push({ id: Date.now(), title, type, watched: false });
+            saveData();
+            renderMovies();
+            document.getElementById('movie-title').value = '';
+        }
+        function toggleMovie(id) {
+            playShortClickSound();
+            state.movies = state.movies.map(m => m.id === id ? { ...m, watched: !m.watched } : m);
+            saveData();
+            renderMovies();
+        }
+        function excluirFilme(id) {
+            const item = state.movies.find(x => x.id === id);
+            if(item) {
+                state.trash.push({ ...item, type: 'Filme / Série', deletedAt: new Date().toLocaleDateString() });
+                state.movies = state.movies.filter(x => x.id !== id);
+                saveData();
+                renderMovies();
+                renderTrash();
+            }
+        }
+
+        function renderBirthdays() {
+            const container = document.getElementById('birthdays-container');
+            if(!container) return;
+            container.innerHTML = '';
+            state.birthdays.forEach(b => {
+                container.innerHTML += `
+                    <div class="p-3 bg-rose-50 rounded-2xl border border-rose-200 flex justify-between items-center text-xs">
+                        <div>
+                            <p class="font-bold text-slate-800">${b.name}</p>
+                            <span class="text-[10px] text-rose-800 font-bold">🎂 ${b.date}</span>
+                        </div>
+                        <button onclick="playTrashSound(); excluirAniversario(${b.id})" class="text-slate-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+        function handleAddBirthday(e) {
+            e.preventDefault();
+            const name = document.getElementById('bday-name').value;
+            const date = document.getElementById('bday-date').value;
+            state.birthdays.push({ id: Date.now(), name, date });
+            saveData();
+            renderBirthdays();
+            document.getElementById('bday-name').value = '';
+            document.getElementById('bday-date').value = '';
+        }
+        function excluirAniversario(id) {
+            const item = state.birthdays.find(x => x.id === id);
+            if(item) {
+                state.trash.push({ ...item, type: 'Aniversário', deletedAt: new Date().toLocaleDateString() });
+                state.birthdays = state.birthdays.filter(x => x.id !== id);
+                saveData();
+                renderBirthdays();
+                renderTrash();
+            }
+        }
+
+        function updateTrashBadge() {
+            const badge = document.getElementById('trash-badge');
+            if(!badge) return;
+            const count = state.trash.length;
+            if(count > 0) {
+                badge.innerText = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+        function openTrashModal() {
+            document.getElementById('trash-modal').classList.remove('hidden');
+            renderTrash();
+        }
+        function closeTrashModal() {
+            document.getElementById('trash-modal').classList.add('hidden');
+        }
+        function renderTrash() {
+            const container = document.getElementById('trash-items-container');
+            if(!container) return;
+            container.innerHTML = '';
+            if(state.trash.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">A lixeira está vazia ✨</p>`;
+                return;
+            }
+            state.trash.forEach((item, index) => {
+                const title = item.title || item.name || item.text || item.description || 'Item excluído';
+                container.innerHTML += `
+                    <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                        <div>
+                            <span class="font-bold text-fofo-pink-dark">[${item.type || 'Item'}]</span> <span class="font-semibold text-slate-800">${title}</span>
+                            <span class="text-[10px] text-slate-400 block">Excluído em: ${item.deletedAt || 'Hoje'}</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="restaurarItemLixeira(${index})" class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg font-bold hover:bg-emerald-200 transition">Restaurar</button>
+                            <button onclick="excluirPermanente(${index})" class="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-lg font-bold hover:bg-rose-200 transition">Excluir</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        function restaurarItemLixeira(index) {
+            playShortClickSound();
+            const item = state.trash[index];
+            if (!item) return;
+            const type = item.type;
+            if (type === 'Tarefa' || type === 'Atividade' || type === 'Atividade Concluída') {
+                state.tasks.push({ id: item.id || Date.now(), title: item.title, time: item.time || '00:00', completed: false });
+                renderTasks();
+            } else if (type === 'Objetivo / Meta') {
+                state.wishlist.push({ id: item.id || Date.now(), title: item.title, price: item.price || 'R$ 0,00', done: false });
+                renderWishlist();
+            } else if (type === 'O que eu aprendi') {
+                state.learned.push({ id: item.id || Date.now(), text: item.text });
+                renderLearned();
+            } else if (type === 'Conteúdo para estudar') {
+                state.studyContent.push({ id: item.id || Date.now(), text: item.text });
+                renderStudyContent();
+            } else if (type === 'Bloco de Rotina') {
+                state.idealRoutine.push(item);
+                renderIdealRoutine();
+            } else if (type === 'Nota de Estudo') {
+                state.studyNotes.push(item);
+                renderPredefinedStudyNotes();
+            } else if (type === 'Dívida / Conta') {
+                state.debts.push(item);
+                renderFinances();
+            } else if (type === 'Gasto Detalhado') {
+                state.expenses.push(item);
+                renderFinances();
+            } else if (type === 'Filme / Série') {
+                state.movies.push(item);
+                renderMovies();
+            } else if (type === 'Aniversário') {
+                state.birthdays.push(item);
+                renderBirthdays();
+            }
+            state.trash.splice(index, 1);
+            saveData();
+            renderTrash();
+        }
+        function excluirPermanente(index) {
+            playTrashSound();
+            state.trash.splice(index, 1);
+            saveData();
+            renderTrash();
+        }
+        function esvaziarLixeiraTotalmente() {
+            playTrashSound();
+            if (confirm("Tem certeza que deseja excluir permanentemente todos os itens da lixeira?")) {
+                state.trash = [];
+                saveData();
+                renderTrash();
+            }
+        }
+
+        const papeisFundoColagem = [
+            { name: "Papel de Folha de Caderno 📓", bg: "url('https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=600&q=80')" },
+            { name: "Papiro Clássico 📜", bg: "url('https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=600&q=80')" },
+            { name: "Folha Vintage Amarelada", bg: "url('https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80')" },
+            { name: "Caderno Romântico Rosa", bg: "url('https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?auto=format&fit=crop&w=600&q=80')" },
+            { name: "Textura Kraft Rústica", bg: "url('https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=600&q=80')" },
+            { name: "Aquarela Suave Pastel", bg: "url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=600&q=80')" },
+            { name: "Pergaminho Antigo", bg: "url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80')" },
+            { name: "Linhas de Diário Íris", bg: "url('https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=600&q=80')" },
+            { name: "Floral Delicado Vintage", bg: "url('https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80')" },
+            { name: "Céu Estrelado Fofo", bg: "url('https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80')" }
+        ];
+
+        const fontesColagem = [
+            { name: 'Scrapbook (Caveat)', class: 'font-scrapbook' },
+            { name: 'Fredoka Fofa', class: 'font-fredoka' },
+            { name: 'Quicksand Limpa', class: 'font-quicksand' },
+            { name: 'Special Elite', class: 'font-special-elite' },
+            { name: 'Italianno Elegante', class: 'font-italianno' },
+            { name: 'Dancing Script', class: 'font-dancing' },
+            { name: 'Playfair Display', class: 'font-playfair' },
+            { name: 'Indie Flower', class: 'font-indie' }
+        ];
+
+        const mensagensMotivacionaisPredefinidas = [
+            "Acredite na sua capacidade de vencer todos os dias! 🌸",
+            "Você é mais forte do que imagina. Continue brilhando! ✨",
+            "Faça dos seus sonhos o seu combustível diário. 💖",
+            "Respire fundo, dê o seu melhor e confie no processo. 🌷"
+        ];
+
+        function mensagemMotivacionalAleatoriaColagem() {
+            playShortClickSound();
+            const msg = mensagensMotivacionaisPredefinidas[Math.floor(Math.random() * mensagensMotivacionaisPredefinidas.length)];
+            const txtArea = document.getElementById('caixa-texto-papiro');
+            if(txtArea) {
+                txtArea.value += (txtArea.value ? "\n" : "") + msg;
+                state.colagemData.text = txtArea.value;
+                saveData();
+            }
+        }
+
+        function mudarCorTextoPapiro(cor) {
+            playShortClickSound();
+            state.colagemData.textColor = cor;
+            const txtArea = document.getElementById('caixa-texto-papiro');
+            if(txtArea) txtArea.style.color = cor;
+            saveData();
+        }
+
+        function mudarPapelFundo(dir) {
+            playShortClickSound();
+            state.colagemData.fundoIndex = (state.colagemData.fundoIndex + dir + papeisFundoColagem.length) % papeisFundoColagem.length;
+            atualizarVisualPapiro();
+            saveData();
+        }
+
+        function mudarFonteTexto(dir) {
+            playShortClickSound();
+            state.colagemData.fontIndex = (state.colagemData.fontIndex + dir + fontesColagem.length) % fontesColagem.length;
+            atualizarVisualPapiro();
+            saveData();
+        }
+
+        function alterarQuantidadeFotos(qtd) {
+            playShortClickSound();
+            state.colagemData.quantidadeFotos = Math.max(1, Math.min(5, state.colagemData.quantidadeFotos + qtd));
+            renderizarFotosColagem();
+            saveData();
+        }
+
+        function ajustarZoomFotoColagem(dir) {
+            playShortClickSound();
+            state.colagemData.zoomFotoLevel = Math.max(0.7, Math.min(1.5, state.colagemData.zoomFotoLevel + (dir * 0.15)));
+            document.getElementById('label-zoom-foto.replace').textContent = `${Math.round(state.colagemData.zoomFotoLevel * 100)}%`;
+            renderizarFotosColagem();
+            saveData();
+        }
+
+        function ajustarZoomTextoColagem(dir) {
+            playShortClickSound();
+            state.colagemData.zoomTextoLevel = Math.max(0.8, Math.min(2.0, state.colagemData.zoomTextoLevel + (dir * 0.15)));
+            const txtArea = document.getElementById('caixa-texto-papiro');
+            if(txtArea) {
+                txtArea.style.fontSize = `${1.2 * state.colagemData.zoomTextoLevel}rem`;
+            }
+            document.getElementById('label-zoom-texto').innerText = `${Math.round(state.colagemData.zoomTextoLevel * 100)}%`;
+            saveData();
+        }
+
+        function renderizarFotosColagem() {
+            const container = document.getElementById('area-fotos-dinamica');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            const w = `${Math.round(75 * state.colagemData.zoomFotoLevel)}px`;
+            const h = `${Math.round(95 * state.colagemData.zoomFotoLevel)}px`;
+
+            for(let i = 1; i <= state.colagemData.quantidadeFotos; i++) {
+                const imgKey = `img${i}`;
+                const imgSrc = state.colagemData[imgKey] || 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=300&q=80';
+                
+                container.innerHTML += `
+                    <div class="foto-mini" style="width: ${w}; height: ${h};" onclick="escolherFotoGaleria(${i})" title="Clique para escolher foto da galeria">
+                        <img src="${imgSrc}" alt="Foto ${i}">
+                        <span class="absolute bottom-0 text-[8px] text-slate-500 font-bold">foto 🌸</span>
+                    </div>
+                `;
+            }
+        }
+
+        function escolherFotoGaleria(slotIndex) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if(file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        state.colagemData[`img${slotIndex}`] = event.target.result;
+                        renderizarFotosColagem();
+                        saveData();
+                        playShortClickSound();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        function atualizarVisualPapiro() {
+            const papiroEl = document.getElementById('papiro-elemento');
+            const txtArea = document.getElementById('caixa-texto-papiro');
+            
+            const fundoObj = papeisFundoColagem[state.colagemData.fundoIndex] || papeisFundoColagem[0];
+            const fonteObj = fontesColagem[state.colagemData.fontIndex] || fontesColagem[0];
+
+            if(papiroEl) {
+                papiroEl.style.backgroundImage = fundoObj.bg;
+                document.getElementById('label-fundo-nome').innerText = fundoObj.name;
+            }
+
+            if(txtArea) {
+                fontesColagem.forEach(f => txtArea.classList.remove(f.class));
+                txtArea.classList.add(fonteObj.class);
+                txtArea.style.color = state.colagemData.textColor || '#000000';
+                txtArea.style.fontSize = `${1.2 * (state.colagemData.zoomTextoLevel || 1)}rem`;
+                if(txtArea.value !== state.colagemData.text) {
+                    txtArea.value = state.colagemData.text;
+                }
+                document.getElementById('label-fonte-nome').innerText = fonteObj.name;
+            }
+            renderizarFotosColagem();
+        }
+
+        function limparColagem() {
+            playTrashSound();
+            if(confirm("Deseja limpar a colagem atual?")) {
+                state.colagemData.text = '';
+                state.colagemData.img1 = '';
+                state.colagemData.img2 = '';
+                state.colagemData.img3 = '';
+                atualizarVisualPapiro();
+                saveData();
+            }
+        }
+
+        /* SALVAR NOTA CORRIGIDA: FICA NO ALFINETE LOGO ABAIXO DAS COLAGENS */
+        function salvarNotaAtual() {
+            playShortClickSound();
+            const novaNota = {
+                id: Date.now(),
+                text: state.colagemData.text,
+                fundoIndex: state.colagemData.fundoIndex,
+                fontIndex: state.colagemData.fontIndex,
+                textColor: state.colagemData.textColor,
+                quantidadeFotos: state.colagemData.quantidadeFotos,
+                img1: state.colagemData.img1,
+                img2: state.colagemData.img2,
+                img3: state.colagemData.img3,
+                date: new Date().toLocaleDateString()
+            };
+            state.savedNotes.unshift(novaNota);
+            saveData();
+            renderSavedNotes();
+            alert("📌 Nota salva com sucesso logo abaixo nas suas colagens!");
+        }
+
+        function renderSavedNotes() {
+            const container = document.getElementById('saved-notes-container');
+            if(!container) return;
+            container.innerHTML = '';
+            if(state.savedNotes.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 col-span-full text-center py-4">Nenhuma nota salva ainda. Clique em "Salvar Nota na Lista" para fixá-la aqui!</p>`;
+                return;
+            }
+            state.savedNotes.forEach((nota, index) => {
+                const fundo = papeisFundoColagem[nota.fundoIndex] || papeisFundoColagem[0];
+                const fonte = fontesColagem[nota.fontIndex] || fontesColagem[0];
+                container.innerHTML += `
+                    <div class="relative p-4 rounded-2xl border-2 border-amber-300 shadow-sm flex flex-col justify-between space-y-3" style="background-image: ${fundo.bg}; background-size: cover; min-height: 200px;">
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-6 h-6 bg-rose-400 rounded-full border-2 border-white shadow-md flex items-center justify-center text-[10px]">📌</div>
+                        <div class="pt-2">
+                            <span class="text-[9px] bg-white/80 px-2 py-0.5 rounded-full font-bold text-slate-700">${nota.date || 'Hoje'}</span>
+                            <p class="${fonte.class} text-sm mt-2 whitespace-pre-wrap font-bold" style="color: ${nota.textColor || '#000000'}; word-break: break-word;">${nota.text || 'Sem texto'}</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-amber-200/50">
+                            <button onclick="carregarNotaSalva(${nota.id})" class="text-[10px] bg-white px-2.5 py-1 rounded-xl font-bold text-amber-900 shadow-xs hover:bg-amber-50">📂 Carregar no Papiro</button>
+                            <button onclick="playTrashSound(); excluirNotaSalva(${nota.id})" class="text-rose-600 text-xs hover:scale-110 transition"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function carregarNotaSalva(id) {
+            playShortClickSound();
+            const nota = state.savedNotes.find(n => n.id === id);
+            if(nota) {
+                state.colagemData.text = nota.text || '';
+                state.colagemData.fundoIndex = nota.fundoIndex || 0;
+                state.colagemData.fontIndex = nota.fontIndex || 0;
+                state.colagemData.textColor = nota.textColor || '#000000';
+                state.colagemData.quantidadeFotos = nota.quantidadeFotos || 3;
+                state.colagemData.img1 = nota.img1 || '';
+                state.colagemData.img2 = nota.img2 || '';
+                state.colagemData.img3 = nota.img3 || '';
+                atualizarVisualPapiro();
+                saveData();
+                window.scrollTo({ top: document.getElementById('papiro-elemento').offsetTop - 100, behavior: 'smooth' });
+            }
+        }
+
+        function excluirNotaSalva(id) {
+            const nota = state.savedNotes.find(n => n.id === id);
+            if(nota) {
+                state.trash.push({ ...nota, type: 'Colagem / Nota Salva', deletedAt: new Date().toLocaleDateString() });
+                state.savedNotes = state.savedNotes.filter(n => n.id !== id);
+                saveData();
+                renderSavedNotes();
+                renderTrash();
+            }
+        }
+
+        /* DOWNLOAD CORRIGIDO MOSTRANDO TODO O TEXTO ORIGINAL (SEM CORTAR) */
+        function salvarComoImagem() {
+            playClickSound();
+            const papiroEl = document.getElementById('papiro-elemento');
+            if(!papiroEl) return;
+            
+            // Ajusta temporariamente o textarea para mostrar todo o texto sem scroll interno no print
+            const txtArea = document.getElementById('caixa-texto-papiro');
+            const originalHeight = txtArea.style.height;
+            txtArea.style.height = 'auto';
+            txtArea.style.height = (txtArea.scrollHeight + 20) + 'px';
+
+            html2canvas(papiroEl, { scale: 2, useCORS: true }).then(canvas => {
+                txtArea.style.height = originalHeight;
+                const link = document.createElement('a');
+                link.download = 'minha-colagem-vintage.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                txtArea.style.height = originalHeight;
+                alert("Erro ao gerar imagem da colagem. Tente novamente!");
+            });
+        }
+
+        function salvarSenhaNova() {
+            const senhaVal = document.getElementById('new-password-input').value;
+            if(!senhaVal) { alert("Digite uma senha válida!"); return; }
+            state.password = senhaVal;
+            saveData();
+            alert("🔑 Senha salva com sucesso!");
+            closePasswordSettingModal();
+        }
+
+        function removerSenha() {
+            state.password = '';
+            saveData();
+            alert("🔓 Senha removida com sucesso!");
+            closePasswordSettingModal();
+        }
+
+        function openPasswordSettingModal() { document.getElementById('password-setting-modal').classList.remove('hidden'); }
+        function closePasswordSettingModal() { document.getElementById('password-setting-modal').classList.add('hidden'); }
+
+        function tentarDesbloquear() {
+            const val = document.getElementById('unlock-password-input').value;
+            if(val === state.password) {
+                document.getElementById('password-lock-modal').classList.add('hidden');
+                playClickSound();
+            } else {
+                alert("Senha incorreta!");
+            }
+        }
+
+        function exportBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `agenda_vintage_backup_${new Date().toLocaleDateString().replace(/\//g, '-')}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importBackup(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedState = JSON.parse(e.target.result);
+                    state = { ...state, ...importedState };
+                    saveData();
+                    initApp();
+                    alert("📂 Backup restaurado com sucesso!");
+                } catch(err) {
+                    alert("Erro ao ler o arquivo de backup.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function initApp() {
+            loadData();
+            applyTheme(state.currentTheme || 'theme-t1');
+            initHeaderDate();
+            renderCalendar();
+            renderIdealRoutine();
+            renderTasks();
+            renderWishlist();
+            renderStudies();
+            renderFinances();
+            renderMenu();
+            renderMovies();
+            renderBirthdays();
+            renderSavedNotes();
+            atualizarVisualPapiro();
+
+            if(state.password && state.password.trim() !== "") {
+                document.getElementById('password-lock-modal').classList.remove('hidden');
+            }
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
